@@ -25,7 +25,12 @@ cd cilium-mesh-on-eks
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
 
-## 🙌 License
+## 💼  License
 
 This library is licensed under the MIT-0 License. See the LICENSE file.
+
+## 🙌 Community
+We welcome all individuals who are enthusiastic about data on Kubernetes to become a part of this open source community. Your contributions and participation are invaluable to the success of this project.
+
+Built with ❤️ at AWS.
 
