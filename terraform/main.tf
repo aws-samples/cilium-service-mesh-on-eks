@@ -99,8 +99,6 @@ module "eks_blueprints_addons" {
 
   enable_aws_load_balancer_controller = true
   
-  depends_on = [helm_release.cilium]
-  
 }
 
 
@@ -243,7 +241,7 @@ resource "helm_release" "cilium" {
         }
         )
       ]
-    depends_on = [null_resource.pre_helm_commands]
+    depends_on = [module.eks_blueprints_addons]
   }
 
 ################################################################################
