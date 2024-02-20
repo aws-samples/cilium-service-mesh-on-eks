@@ -1,4 +1,4 @@
-## Elevate Your Amazon EKS Environment with Cilium Service Mesh
+# Elevate Your Amazon EKS Environment with Cilium Service Mesh
 
 This project shows the steps involved to implement the solution architecture explained in this AWS blog: [Elevate Your Amazon EKS Environment with Cilium Service Mesh]()
 
@@ -11,6 +11,15 @@ This project shows the steps involved to implement the solution architecture exp
   	- [ ] [kubectl](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html)
 
 Assumption : You already configured a [default] in the AWS CLI config/credentials files.
+
+## Solution
+
+### Step 1 - Clone this GitHub repo to your machine:
+
+```bash
+git clone https://github.com/aws-samples/cilium-mesh-on-eks/
+cd cilium-mesh-on-eks
+```
 
 ## Security
 
