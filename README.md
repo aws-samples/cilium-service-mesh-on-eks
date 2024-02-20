@@ -1,8 +1,8 @@
-# Elevate Your Amazon EKS Environment with Cilium Service Mesh
+# Elevate Your Amazon EKS Environment with Cilium Service Mesh 
 
 This project shows the steps involved to implement the solution architecture explained in this AWS blog: [Elevate Your Amazon EKS Environment with Cilium Service Mesh]()
 
-## Prerequisites
+## 🎯 Prerequisites
 
 - [ ] A machine which has access to AWS and Kubernetes API server.
 - [ ] You need the following tools on the client machine.
@@ -12,7 +12,7 @@ This project shows the steps involved to implement the solution architecture exp
 
 Assumption : You already configured a [default] in the AWS CLI config/credentials files.
 
-## Solution
+## 🧩 Solution
 
 ### Step 1 - Clone this GitHub repo to your machine:
 
@@ -21,11 +21,11 @@ git clone https://github.com/aws-samples/cilium-mesh-on-eks/
 cd cilium-mesh-on-eks
 ```
 
-## Security
+## 🔐 Security
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
 
-## License
+## 🙌 License
 
 This library is licensed under the MIT-0 License. See the LICENSE file.
 
