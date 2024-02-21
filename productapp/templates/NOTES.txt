@@ -11,7 +11,7 @@ NOTES:
   CILIUM_INGRESS_URL=$(kubectl get svc cilium-ingress -n kube-system -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
   echo "http://$CILIUM_INGRESS_URL"
 
-2. Access the displayed URL in a terminal using cURL or via a browser window
+2. Access the displayed URL in a terminal using "curl" or via a browser window
 
 
 
