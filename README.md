@@ -31,7 +31,16 @@ terraform init
 terraform apply --auto-approve
 ```
 
-It takes 15 minutes for an EKS cluster creation to be ready. Terraform script updates the kubeconfig file automatically. 
+```Sample Output
+Apply complete! Resources: 65 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+configure_kubectl = "aws eks --region us-west-2 update-kubeconfig --name terraform2"
+```
+
+It takes 15 minutes for an EKS cluster creation to be ready. Terraform script updates the kubeconfig file automatically. Update kubeconfig as shown in the above output.
+
 
 Verify that the worker nodes status is `Ready` by doing `kubectl get nodes`.
 
@@ -80,16 +89,6 @@ kubectl create namespace workshop
 cd productapp
 helm install productapp . -n workshop
 ```
-### Step 5 - Update kubeconfig config
-
-```
-Apply complete! Resources: 65 added, 0 changed, 0 destroyed.
-
-Outputs:
-
-configure_kubectl = "aws eks --region us-west-2 update-kubeconfig --name terraform2"
-```
-
 
 
 ## 🔐 Security
