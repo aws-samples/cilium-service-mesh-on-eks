@@ -80,8 +80,15 @@ kubectl create namespace workshop
 cd productapp
 helm install productapp . -n workshop
 ```
+### Step 5 - Update kubeconfig config
 
+```
+Apply complete! Resources: 65 added, 0 changed, 0 destroyed.
 
+Outputs:
+
+configure_kubectl = "aws eks --region us-west-2 update-kubeconfig --name terraform2"
+```
 
 
 
