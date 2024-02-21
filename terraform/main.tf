@@ -62,7 +62,7 @@ module "eks" {
 
   cluster_addons = {
     coredns    = {}
-  # kube-proxy = {}
+    kube-proxy = {}
     vpc-cni    = {}
   }
 
@@ -98,39 +98,6 @@ module "eks_blueprints_addons" {
   oidc_provider_arn = module.eks.oidc_provider_arn
 
   enable_aws_load_balancer_controller = true
-
-################################################################################
-# Dependencies 
-################################################################################
-
-resource "null_resource" "update_kubeconfig" {
-  triggers = {
-    cluster_name = module.eks.cluster_name
-    cluster_endpoint = module.eks.cluster_endpoint
-  }
-
-  provisioner "local-exec" {
-    command = <<-EOT
-    aws eks update-kubeconfig --name ${module.eks.cluster_name} --region ${local.region}
-    EOT
-  }
-  depends_on = [module.eks]
-}
-
-resource "null_resource" "pre_helm_commands" {
-  triggers = {
-    cluster_name = module.eks.cluster_name
-  }
-
-  provisioner "local-exec" {
-    command = <<-EOT
-      kubectl -n kube-system delete ds kube-proxy
-      kubectl -n kube-system delete cm kube-proxy
-    EOT
-  }
-  depends_on = [null_resource.update_kubeconfig]
-}
-
 
 ################################################################################
 # Supporting Resources
