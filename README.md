@@ -28,7 +28,7 @@ cd cilium-mesh-on-eks
 ```bash
 # Change directory to the right folder
 cd terraform
-# Deploy terraform
+# Deploy EKS Terraform blueprint
 terraform apply --auto-approve
 ```
 
