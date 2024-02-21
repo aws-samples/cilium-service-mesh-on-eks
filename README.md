@@ -32,6 +32,41 @@ It takes 15 minutes for an EKS cluster creation to be ready. Terraform script up
 
 Verify that the worker nodes status is `Ready` by doing `kubectl get nodes`.
 
+### Step 3 - Deploy Cilium on EKS cluster with Helm
+
+```bash
+cd ..
+cd productapp
+helm upgrade --install cilium cilium/cilium --version 1.14.7 \
+--namespace kube-system \
+--set hubble.enabled=true \
+--set hubble.tls.auto.enabled=true \
+--set hubble.metrics.enabled="{dns,drop,tcp,flow,icmp,http}" \
+--set hubble.relay.enabled=true \
+--set hubble.ui.enabled=true \
+--set hubble.ui.service.type=NodePort \
+--set hubble.relay.service.type=NodePort \
+--set kubeProxyReplacement=strict \
+--set encryption.enabled=false \
+--set encryption.nodeEncryption=false \
+--set routingMode=native \
+--set ipv4NativeRoutingCIDR="0.0.0.0/0" \
+--set bpf.masquerade=false \
+--set nodePort.enabled=true \
+--set autoDirectNodeRoutes=true \
+--set hostLegacyRouting=false \
+--set ingressController.enabled=true \
+--set ingressController.loadbalancerMode=shared \
+--set cni.chainingMode=aws-cni \
+--set cni.install=true
+```
+
+Verify with `kubectl get pods -A` that status of cilium pods and cilium agents are `Running` state. Also verify with `kubectl get svc -A` that the `cilium-ingress` service has an AWS load balancer DNS name assigned to it (in the `EXTERNAL-IP` of the output.
+
+
+
+
+
 
 ## 🔐 Security
 
