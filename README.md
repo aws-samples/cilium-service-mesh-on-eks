@@ -24,10 +24,8 @@ cd cilium-mesh-on-eks
 ### Step 2 - Deploy EKS cluster with Terraform
 
 ```bash
-# Change directory to the right folder
 cd terraform
 
-# Deploy EKS Terraform blueprint
 terraform apply --auto-approve
 ```
 
