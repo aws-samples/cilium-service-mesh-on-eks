@@ -39,8 +39,10 @@ Verify that the worker nodes status is `Ready` by doing `kubectl get nodes`.
 ### Step 3 - Deploy Cilium on EKS cluster with Helm
 
 ```bash
+# Change directory to the right folder
 cd ..
 cd productapp
+# Install Cilium
 helm upgrade --install cilium cilium/cilium --version 1.14.7 \
 --namespace kube-system \
 --set hubble.enabled=true \
