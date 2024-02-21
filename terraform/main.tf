@@ -33,7 +33,6 @@ data "aws_availability_zones" "available" {}
 locals {
   name   = basename(path.cwd)
   region = "us-west-2"
-
   vpc_cidr = "10.0.0.0/16"
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
@@ -78,6 +77,9 @@ module "eks" {
     }
   }
 
+ 
+  }
+
   tags = local.tags
 }
 
@@ -94,9 +96,9 @@ module "eks_blueprints_addons" {
   cluster_version   = module.eks.cluster_version
   oidc_provider_arn = module.eks.oidc_provider_arn
 
-  # This is required to expose Cilium Ingress
+  # This is required to expose the ingress solution
   enable_aws_load_balancer_controller = true
-
+  
   tags = local.tags
 }
 
