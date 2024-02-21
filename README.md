@@ -81,6 +81,7 @@ helm upgrade --install cilium cilium/cilium --version 1.14.7 \
 kubectl create namespace workshop
 
 # Install microservices application
+cd .. 
 cd productapp
 helm install productapp . -n workshop
 ```
