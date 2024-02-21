@@ -85,6 +85,29 @@ cd productapp
 helm install productapp . -n workshop
 ```
 
+### Step 5 - Deploy Ingress to access Product Catalog Application
+
+```bash
+cat <<EOF | kubectl apply -f -
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace : workshop
+  name: workshopingress # name given to the ingress
+spec:
+  ingressClassName: cilium
+  rules:
+  - http:
+      paths:
+      - path: / # this rule applies to all requests that specifies this path
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend # route all these requests to this service
+            port:
+              number: 9000 # route the requests to this port of the frontend service
+EOF
+```
 
 ## 🔐 Security
 
