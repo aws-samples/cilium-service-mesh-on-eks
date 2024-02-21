@@ -14,12 +14,24 @@ Assumption : You already configured a [default] in the AWS CLI config/credential
 
 ## 🧩 Solution
 
-### Step 1 - Clone this GitHub repo to your machine:
+### Step 1 - Clone this GitHub repo to your machine
 
 ```bash
 git clone https://github.com/aws-samples/cilium-mesh-on-eks/
 cd cilium-mesh-on-eks
 ```
+
+### Step 2 - Deploy EKS cluster with Terraform
+
+```bash
+cd terraform
+terraform apply --auto-approve
+```
+
+It takes 15 minutes for an EKS cluster creation to be ready. Terraform script updates the kubeconfig file automatically. 
+
+Verify that the worker nodes status is Ready by doing `kubectl get nodes`.
+
 
 ## 🔐 Security
 
