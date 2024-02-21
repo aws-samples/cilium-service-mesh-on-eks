@@ -28,16 +28,17 @@ provider "helm" {
   }
 }
 
-
 data "aws_availability_zones" "available" {}
 
 locals {
   name   = basename(path.cwd)
   region = "us-west-2"
+
   vpc_cidr = "10.0.0.0/16"
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
-  cilium_chart_version = "1.14.7"
+  istio_chart_url     = "https://istio-release.storage.googleapis.com/charts"
+  istio_chart_version = "1.20.2"
 
   tags = {
     Blueprint  = local.name
@@ -69,7 +70,6 @@ module "eks" {
 
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
-  
 
   eks_managed_node_groups = {
     initial = {
@@ -81,6 +81,27 @@ module "eks" {
     }
   }
 
+  #  EKS K8s API cluster needs to be able to talk with the EKS worker nodes with port 15017/TCP and 15012/TCP which is used by Istio
+  #  Istio in order to create sidecar needs to be able to communicate with webhook and for that network passage to EKS is needed.
+  node_security_group_additional_rules = {
+    ingress_15017 = {
+      description                   = "Cluster API - Istio Webhook namespace.sidecar-injector.istio.io"
+      protocol                      = "TCP"
+      from_port                     = 15017
+      to_port                       = 15017
+      type                          = "ingress"
+      source_cluster_security_group = true
+    }
+    ingress_15012 = {
+      description                   = "Cluster API to nodes ports/protocols"
+      protocol                      = "TCP"
+      from_port                     = 15012
+      to_port                       = 15012
+      type                          = "ingress"
+      source_cluster_security_group = true
+    }
+  }
+
   tags = local.tags
 }
 
@@ -88,6 +109,11 @@ module "eks" {
 # EKS Blueprints Addons
 ################################################################################
 
+resource "kubernetes_namespace_v1" "istio_system" {
+  metadata {
+    name = "istio-system"
+  }
+}
 
 module "eks_blueprints_addons" {
   source  = "aws-ia/eks-blueprints-addons/aws"
@@ -98,13 +124,15 @@ module "eks_blueprints_addons" {
   cluster_version   = module.eks.cluster_version
   oidc_provider_arn = module.eks.oidc_provider_arn
 
+  # This is required to expose Istio Ingress Gateway
   enable_aws_load_balancer_controller = true
+
+  tags = local.tags
 }
 
 ################################################################################
 # Supporting Resources
 ################################################################################
-
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
