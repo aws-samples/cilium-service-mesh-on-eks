@@ -28,6 +28,7 @@ cd cilium-mesh-on-eks
 ```bash
 # Change directory to the right folder
 cd terraform
+
 # Deploy EKS Terraform blueprint
 terraform apply --auto-approve
 ```
@@ -42,6 +43,7 @@ Verify that the worker nodes status is `Ready` by doing `kubectl get nodes`.
 # Change directory to the right folder
 cd ..
 cd productapp
+
 # Install Cilium
 helm upgrade --install cilium cilium/cilium --version 1.14.7 \
 --namespace kube-system \
@@ -73,7 +75,10 @@ helm upgrade --install cilium cilium/cilium --version 1.14.7 \
 ### Step 4 - Deploy Product Catalog Application
 
 ```bash
+# Create workshop namespace 
 kubectl create namespace workshop
+
+# Install microservices application
 cd productapp
 helm install productapp . -n workshop
 ```
