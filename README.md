@@ -61,7 +61,8 @@ helm upgrade --install cilium cilium/cilium --version 1.14.7 \
 --set cni.install=true
 ```
 
-Verify with `kubectl get pods -A` that status of cilium pods and cilium agents are `Running` state. Also verify with `kubectl get svc -A` that the `cilium-ingress` service has an AWS load balancer DNS name assigned to it (in the `EXTERNAL-IP` of the output.
+- Verify with `kubectl get pods -A` that status of cilium pods and cilium agents are `Running` state.
+- Verify with `kubectl get svc -A` that the `cilium-ingress` service has an AWS load balancer DNS name assigned to it (in the `EXTERNAL-IP` of the output.
 
 
 
