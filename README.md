@@ -79,10 +79,8 @@ helm upgrade --install cilium cilium/cilium --version 1.14.7 \
 ### Step 4 - Deploy Product Catalog Application
 
 ```bash
-# Create workshop namespace 
 kubectl create namespace workshop
 
-# Install microservices application
 cd .. 
 cd productapp
 helm install productapp . -n workshop
