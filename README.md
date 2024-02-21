@@ -49,6 +49,7 @@ Verify that the worker nodes status is `Ready` by doing `kubectl get nodes`.
 ```bash
 helm upgrade --install cilium cilium/cilium --version 1.14.7 \
 --namespace kube-system \
+--reuse-values -f ~/cilium-mesh-on-eks/values_cilium.yaml \
 --set hubble.enabled=true \
 --set hubble.tls.auto.enabled=true \
 --set hubble.metrics.enabled="{dns,drop,tcp,flow,icmp,http}" \
@@ -69,6 +70,7 @@ helm upgrade --install cilium cilium/cilium --version 1.14.7 \
 --set ingressController.loadbalancerMode=shared \
 --set cni.chainingMode=aws-cni \
 --set cni.install=true
+
 ```
 
 - Verify with `kubectl get pods -A` that status of cilium pods and cilium agents are `Running` state.
