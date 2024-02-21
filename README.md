@@ -26,6 +26,8 @@ cd cilium-mesh-on-eks
 ```bash
 cd terraform
 
+terraform init
+
 terraform apply --auto-approve
 ```
 
