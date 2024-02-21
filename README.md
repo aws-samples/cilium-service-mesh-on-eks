@@ -18,13 +18,17 @@ Assumption : You already configured a [default] in the AWS CLI config/credential
 
 ```bash
 git clone https://github.com/aws-samples/cilium-mesh-on-eks/
+
+# Change directory to the right folder
 cd cilium-mesh-on-eks
 ```
 
 ### Step 2 - Deploy EKS cluster with Terraform
 
 ```bash
+# Change directory to the right folder
 cd terraform
+# Deploy terraform
 terraform apply --auto-approve
 ```
 
