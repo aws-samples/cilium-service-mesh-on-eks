@@ -30,7 +30,7 @@ terraform apply --auto-approve
 
 It takes 15 minutes for an EKS cluster creation to be ready. Terraform script updates the kubeconfig file automatically. 
 
-Verify that the worker nodes status is Ready by doing `kubectl get nodes`.
+Verify that the worker nodes status is `Ready` by doing `kubectl get nodes`.
 
 
 ## 🔐 Security
