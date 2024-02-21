@@ -88,12 +88,6 @@ module "eks" {
 # EKS Blueprints Addons
 ################################################################################
 
-resource "kubernetes_namespace_v1" "istio_system" {
-  metadata {
-    name = "istio-system"
-  }
-}
-
 module "eks_blueprints_addons" {
   source  = "aws-ia/eks-blueprints-addons/aws"
   version = "~> 1.14"
