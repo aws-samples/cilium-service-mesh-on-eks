@@ -186,6 +186,7 @@ spec:
     version: v2
 EOF
 ```
+### Step X - Add a product in the web page
 
 ### Step X - Deploy Traffic Shifting Policy (CiliumEnvoyConfig)
 
