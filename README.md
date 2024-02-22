@@ -41,7 +41,6 @@ configure_kubectl = "aws eks --region us-west-2 update-kubeconfig --name terrafo
 
 It takes 15 minutes for an EKS cluster creation to be ready. Terraform script updates the kubeconfig file automatically. Update kubeconfig as shown in the above output.
 
-
 Verify that the worker nodes status is `Ready` by doing `kubectl get nodes`.
 
 ### Step 3 - Deploy Cilium on EKS cluster with Helm
