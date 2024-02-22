@@ -70,9 +70,11 @@ helm upgrade --install cilium cilium/cilium --version 1.14.7 \
 --set ingressController.loadbalancerMode=shared \
 --set cni.chainingMode=aws-cni \
 --set cni.install=true
-
 ```
-
+- Notice the following in the above Helm parameters : 
+  - We use 
+  - We replace kube-proxy functionality with Cilium' s own eBPF based implementation.
+  - We deploy Cilum Ingress Controller
 - Verify with `kubectl get pods -A` that status of cilium pods and cilium agents are `Running` state.
 - Verify with `kubectl get svc -A` that the `cilium-ingress` service has an AWS load balancer DNS name assigned to it (in the `EXTERNAL-IP` of the output.
 
@@ -86,7 +88,7 @@ cd productapp
 helm install productapp . -n workshop
 ```
 
-### Step 5 - Deploy Ingress to access Product Catalog Application
+### Step 5 - Configure Ingress to access the Product Catalog Application
 
 ```bash
 cat <<EOF | kubectl apply -f -
