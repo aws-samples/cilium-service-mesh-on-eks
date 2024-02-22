@@ -258,6 +258,11 @@ spec:
 EOF
 ```
 
+### Step X - Test access from ProductCatalog service to CatalogDetail service
+
+```bash
+for i in {1..5}; do kubectl -n workshop exec -it <productcatalog-pod-name> -- curl catalogdetail:3000/catalogDetail; done
+```
 
 
 ### Step X - Destroy
