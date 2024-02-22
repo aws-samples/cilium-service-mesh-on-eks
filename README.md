@@ -190,6 +190,7 @@ EOF
 ### Step X - Deploy Traffic Shifting Policy (CiliumEnvoyConfig)
 
 ```bash
+cat <<EOF | kubectl apply -f -
 apiVersion: cilium.io/v2
 kind: CiliumEnvoyConfig
 metadata:
