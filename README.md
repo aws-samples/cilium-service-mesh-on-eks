@@ -147,6 +147,116 @@ Either use `curl` or a browser to navigate to the URL.
 
 Sample Application Screenshot
 
+### Step X - Create deployment specific services
+
+```bash
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: catalogdetail
+  name: catalogdetailv1
+  namespace: workshop
+spec:
+  ports:
+  - name: http
+    port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: catalogdetail
+    version: v1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: catalogdetail
+  name: catalogdetailv2
+  namespace: workshop
+spec:
+  ports:
+  - name: http
+    port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: catalogdetail
+    version: v2
+EOF
+```
+
+### Step X - Deploy Traffic Shifting Policy (CiliumEnvoyConfig)
+
+```bash
+apiVersion: cilium.io/v2
+kind: CiliumEnvoyConfig
+metadata:
+  name: traffic-shifting-test
+  namespace: workshop
+spec:
+  services:
+    - name: catalogdetail
+      namespace: workshop
+  backendServices:
+    - name: catalogdetailv1
+      namespace: workshop
+    - name: catalogdetailv2
+      namespace: workshop
+  resources:
+    - "@type": type.googleapis.com/envoy.config.listener.v3.Listener
+      name: traffic-shifting-test
+      filter_chains:
+        - filters:
+            - name: envoy.filters.network.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+                stat_prefix: traffic-shifting-test
+                rds:
+                  route_config_name: lb_route
+                http_filters:
+                  - name: envoy.filters.http.router
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+    - "@type": type.googleapis.com/envoy.config.route.v3.RouteConfiguration
+      name: lb_route
+      virtual_hosts:
+        - name: "lb_route"
+          domains: [ "*" ]
+          routes:
+            - match:
+                prefix: "/"
+              route:
+                weighted_clusters:
+                  clusters:
+                    - name: "workshop/catalogdetailv1"
+                      weight: 50
+                    - name: "workshop/catalogdetailv2"
+                      weight: 50
+                retry_policy:
+                  retry_on: 5xx
+                  num_retries: 3
+                  per_try_timeout: 1s
+    - "@type": type.googleapis.com/envoy.config.cluster.v3.Cluster
+      name: "workshop/catalogdetailv1"
+      connect_timeout: 2s
+      lb_policy: ROUND_ROBIN
+      type: EDS
+      outlier_detection:
+        split_external_local_origin_errors: true
+        consecutive_local_origin_failure: 2
+    - "@type": type.googleapis.com/envoy.config.cluster.v3.Cluster
+      name: "workshop/catalogdetailv2"
+      connect_timeout: 2s
+      lb_policy: ROUND_ROBIN
+      type: EDS
+      outlier_detection:
+        split_external_local_origin_errors: true
+        consecutive_local_origin_failure: 2
+EOF
+```
+
 
 
 ### Step X - Destroy
