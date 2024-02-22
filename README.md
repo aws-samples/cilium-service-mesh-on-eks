@@ -270,7 +270,7 @@ for i in {1..4}; do kubectl -n workshop exec -it <productcatalog-pod-name> -- cu
 
 ```bash
 helm uninstall productapp -n workshop
-kubectl delete ingress workshopingress -n workshop
+kubectl delete ingress productappingress -n workshop
 kubectl delete svc catalogdetailv1 -n workshop
 kubectl delete svc catalogdetailv2 -n workshop
 helm uninstall cilium -n kube-system
