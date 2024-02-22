@@ -87,7 +87,12 @@ cd productapp
 helm install productapp . -n workshop
 ```
 
-### Step 5 - Configure Ingress to access the Product Catalog Application
+Sample Output
+```
+
+```
+
+### Step 5 - Configure Ingress to access the application
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -110,6 +115,20 @@ spec:
               number: 9000 # route the requests to this port of the frontend service
 EOF
 ```
+
+### Step 6 - Access the Product Catalog Application
+
+Get the URL to access the application. 
+
+```bash
+CILIUM_INGRESS_URL=$(kubectl get svc cilium-ingress -n kube-system -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
+echo "http://$CILIUM_INGRESS_URL"
+```
+
+Either use `curl` or a browser to navigate to the URL.
+
+Sample Application Screenshot
+
 
 
 ### Step X - Destroy
