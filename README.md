@@ -35,10 +35,10 @@ Apply complete! Resources: 65 added, 0 changed, 0 destroyed.
 
 Outputs:
 
-configure_kubectl = "aws eks --region us-west-2 update-kubeconfig --name terraform2"
+configure_kubectl = "aws eks --region us-west-2 update-kubeconfig --name terraform"
 ```
 
-It takes 15 minutes for an EKS cluster creation to be ready. Terraform script updates the kubeconfig file automatically. Update kubeconfig as shown in the above output.
+It takes ~15 minutes for an EKS cluster creation process to complete. Update kubeconfig using the command provided in the Terraform output. 
 
 Verify that the worker nodes status is `Ready` by doing `kubectl get nodes`.
 
@@ -69,10 +69,11 @@ helm upgrade --install cilium cilium/cilium --version 1.14.7 \
 --set cni.chainingMode=aws-cni \
 --set cni.install=true
 ```
-- Notice the following in the above Helm parameters : 
-  - We use 
+- A few parameters worth mentioning from above : 
   - We replace kube-proxy functionality with Cilium' s own eBPF based implementation.
-  - We deploy Cilum Ingress Controller
+  - We enable Cilium Ingress Controller.
+    - We use a specific annotation from values_cilium.yaml so that Cilium Ingress can be exposed through an AWS Network Load Balancer.
+  - We enable Hubble.
 - Verify with `kubectl get pods -A` that status of cilium pods and cilium agents are `Running` state.
 - Verify with `kubectl get svc -A` that the `cilium-ingress` service has an AWS load balancer DNS name assigned to it (in the `EXTERNAL-IP` of the output.
 
