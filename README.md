@@ -69,6 +69,24 @@ helm upgrade --install cilium cilium/cilium --version 1.14.7 \
 --set cni.chainingMode=aws-cni \
 --set cni.install=true
 ```
+
+Sample Output
+```
+Release "cilium" does not exist. Installing it now.
+NAME: cilium
+LAST DEPLOYED: Wed Feb 21 23:46:36 2024
+NAMESPACE: kube-system
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+You have successfully installed Cilium with Hubble Relay and Hubble UI.
+
+Your release version is 1.14.7.
+
+For any further help, visit https://docs.cilium.io/en/v1.14/gettinghelp
+```
+
 - A few parameters worth mentioning from above : 
   - We replace kube-proxy functionality with Cilium' s own eBPF based implementation.
   - We enable Cilium Ingress Controller.
