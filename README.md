@@ -25,13 +25,12 @@ cd cilium-mesh-on-eks
 
 ```bash
 cd terraform
-
 terraform init
-
 terraform apply --auto-approve
 ```
 
-```Sample Output
+Sample Output
+```
 Apply complete! Resources: 65 added, 0 changed, 0 destroyed.
 
 Outputs:
