@@ -262,7 +262,7 @@ EOF
 ### Step X - Test access from ProductCatalog service to CatalogDetail service
 
 ```bash
-for i in {1..4}; do kubectl -n workshop exec -it <productcatalog-pod-name> -- curl catalogdetail:3000/catalogDetail; done
+for i in {1..6}; do echo "Output $i:"; kubectl -n workshop exec -it productcatalog-64848f7996-bh7ch -- curl catalogdetail:3000/catalogDetail; echo ""; done
 ```
 
 
