@@ -118,7 +118,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   namespace : workshop
-  name: workshopingress # name given to the ingress
+  name: productappingress # name given to the ingress
 spec:
   ingressClassName: cilium
   rules:
@@ -264,6 +264,18 @@ EOF
 ```bash
 for i in {1..4}; do kubectl -n workshop exec -it <productcatalog-pod-name> -- curl catalogdetail:3000/catalogDetail; done
 ```
+
+
+### Step X - Uninstall Product Catalog Application and Cilium
+
+```bash
+helm uninstall productapp -n workshop
+kubectl delete ingress workshopingress -n workshop
+kubectl delete svc catalogdetailv1 -n workshop
+kubectl delete svc catalogdetailv2 -n workshop
+helm uninstall cilium -n kube-system
+```
+
 
 
 ### Step X - Destroy
