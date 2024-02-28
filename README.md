@@ -232,11 +232,11 @@ spec:
     version: v2
 EOF
 ```
-### Step 8 - Add a product in the web page
+### Step 8 - Add a product on the web page
 
 On the application web page add a product. Any id and name is fine. 
 
-Sample output
+SAMPLE SCREENSHOT / SAMPLE SCREENSHOT / SAMPLE SCREENSHOT 
 
 Refresh the page and notice that the vendors list sometimes shows `ABC.com` only and some other times both `ABC.com` and `XYZ.com`. This is because the product data is persisted in the `Product Catalog` microservice and the vendor information is persisted in the `Catalog Detail` microservice. When you add a product to the list, the randomized vendor information for the product you added gets persisted on one of the `catalogdetail` pods. Either `catalogdetail-...` pod which is part of `catalogdetail` deployment or `catalogdetail2-...` pod which is part of the `catalogdetail2` deployment.
 
