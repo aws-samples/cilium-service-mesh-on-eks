@@ -194,9 +194,17 @@ Sample output
 
 ### Step 7 - Access Cilium Hubble UI for Service Map Visualization
 
-You can use Cilium Hubble to visualize service dependencies. You will need Cilium client in your 
+You can use Cilium Hubble to visualize service dependencies. Use the commands in the following command snippet. You will see a new browser tab automatically being spun up and see the Hubble UI on that page. Select `workshop` namespace in there.
 
-### Step 7 - Create deployment specific services
+Below is a sample screenshot.
+
+HUBBLE SCREENSHOT / HUBBLE SCREENSHOT / HUBBLE SCREENSHOT / HUBBLE SCREENSHOT
+
+
+
+
+
+### Step 8 - Create deployment specific services
 
 To test traffic management capabilities of Cilium we will create two additional Kubernetes service resources. `catalogdetailv1` service will be selecting the pods within the `catalogdetail` deployment. `catalogdetailv2` service will be selecting the pods within the `catalogdetail2`deployment.
 
