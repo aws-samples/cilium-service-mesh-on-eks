@@ -1,4 +1,4 @@
-# Elevate Your Amazon EKS Environment with Cilium Service Mesh 
+![image](https://github.com/aws-samples/cilium-mesh-on-eks/assets/34840364/5cd3256c-d015-41ed-8003-42e03cf04549)![image](https://github.com/aws-samples/cilium-mesh-on-eks/assets/34840364/c4b9eedd-e7b8-4328-9c02-5bb0801ec098)# Elevate Your Amazon EKS Environment with Cilium Service Mesh 
 
 This project shows the steps involved to implement the solution architecture explained in this AWS blog: [Elevate Your Amazon EKS Environment with Cilium Service Mesh]()
 
@@ -123,6 +123,32 @@ Product Catalog Application is succesfully installed !
 2. Once you configure the ingress in the next step you will be able to access this URL in a terminal using "curl" or via a browser window
 ```
 
+### Step 5 - Investigate the Product Catalog Application
+
+Application architecture is as shown below. 
+
+
+
+
+Use `kubectl get deployment,pod,service  -n workshop` to have a look at the resources that we deployed in the previous step. 
+
+```bash
+NAME                             READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/catalogdetail    1/1     1            1           21m
+deployment.apps/catalogdetail2   1/1     1            1           21m
+deployment.apps/frontend         1/1     1            1           21m
+deployment.apps/productcatalog   1/1     1            1           21m
+
+NAME                                  READY   STATUS    RESTARTS   AGE
+pod/catalogdetail-5896fff6b8-tc75k    1/1     Running   0          21m
+pod/catalogdetail2-7d7d5cd48b-b9m7t   1/1     Running   0          21m
+pod/frontend-78f696695b-tvh9p         1/1     Running   0          21m
+pod/productcatalog-64848f7996-gpnl7   1/1     Running   0          21m
+
+NAME                      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+service/catalogdetail     ClusterIP   172.20.15.14     <none>        3000/TCP   21m
+service/frontend          ClusterIP   172.20.95.212    <none>        9000/TCP   21m
+
 ### Step 5 - Configure Ingress to access the application
 
 ```bash
@@ -156,11 +182,13 @@ CILIUM_INGRESS_URL=$(kubectl get svc cilium-ingress -n kube-system -o jsonpath='
 echo "http://$CILIUM_INGRESS_URL"
 ```
 
-Either use `curl` or a browser to navigate to the URL.
+Access the application URL either using `curl` or a browser. You should see the following web page.
 
-Sample Application Screenshot
+Sample output
 
-### Step X - Create deployment specific services
+### Step 7 - Create deployment specific services
+
+To test traffic management capabilities of Cilium we will create two additional services. 
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -199,7 +227,14 @@ spec:
     version: v2
 EOF
 ```
-### Step X - Add a product in the web page
+### Step 8 - Add a product in the web page
+
+On the application web page add a product. Any id and name is fine. 
+
+Sample output
+
+Refresh the page and notice that the vendors list somestimes shows `ABC.com` and sometimes both `ABC.com` and `XYZ.com`. This is because the product data is persisted in the Product Catalog microservice and the vendor information is persisted in the Catalog Detail microservice. When you add a product to the list, Product Catalog microservice sends a request to one of the Catalog Detail  persists a random vendor information data 
+
 
 ### Step X - Deploy Traffic Shifting Policy (CiliumEnvoyConfig)
 
