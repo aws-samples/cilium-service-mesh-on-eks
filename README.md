@@ -1,4 +1,4 @@
-![image](https://github.com/aws-samples/cilium-mesh-on-eks/assets/34840364/5cd3256c-d015-41ed-8003-42e03cf04549)![image](https://github.com/aws-samples/cilium-mesh-on-eks/assets/34840364/c4b9eedd-e7b8-4328-9c02-5bb0801ec098)# Elevate Your Amazon EKS Environment with Cilium Service Mesh 
+# Elevate Your Amazon EKS Environment with Cilium Service Mesh 
 
 This project shows the steps involved to implement the solution architecture explained in this AWS blog: [Elevate Your Amazon EKS Environment with Cilium Service Mesh]()
 
