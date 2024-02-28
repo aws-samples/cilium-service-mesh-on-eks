@@ -127,10 +127,11 @@ Product Catalog Application is succesfully installed !
 
 Application architecture is as shown below. 
 
+APP ARCHICTURE DIAGRAM HERE / APP ARCHICTURE DIAGRAM HERE / APP ARCHICTURE DIAGRAM HERE
 
+The user accesses `Frontend` microservice, then `Frontend` microservice calls the `Product Catalog` service, and then `Product Catalog` service calls the `Catalog Detail` microservice. The `Catalog Detail` microservice is comprised of two different deployments which are actually identical. The reason we use two deployments is to demonstrate traffic management capabilities of service mesh at a later step. 
 
-
-Use `kubectl get deployment,pod,service  -n workshop` to have a look at the resources that we deployed in the previous step. 
+Use `kubectl get deployment,pod,service  -n workshop` to have a look at the resources deployed as part of the `Product Catalog Application`. 
 
 ```bash
 NAME                             READY   UP-TO-DATE   AVAILABLE   AGE
@@ -148,6 +149,7 @@ pod/productcatalog-64848f7996-gpnl7   1/1     Running   0          21m
 NAME                      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
 service/catalogdetail     ClusterIP   172.20.15.14     <none>        3000/TCP   21m
 service/frontend          ClusterIP   172.20.95.212    <none>        9000/TCP   21m
+```
 
 ### Step 5 - Configure Ingress to access the application
 
