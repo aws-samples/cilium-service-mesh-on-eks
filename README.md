@@ -151,6 +151,9 @@ service/catalogdetail     ClusterIP   172.20.15.14     <none>        3000/TCP   
 service/frontend          ClusterIP   172.20.95.212    <none>        9000/TCP   21m
 ```
 
+Notice that there are two deployments for the `Catalog Detail` microservice; `catalogdetail` and `catalogdetail2`. The `catalogdetail` Kubernetes service points out to both `catalogdetail-....` and `catalogdetail2-....` pods.  Meaning that a request from the `productcatalog-.....` pod to the `catalogdetail` service can get forwarded to any of those pods. You can verify this by checking the `kubectl describe service catalogdetail` output. This is important to note since it will become relevant in the traffic management scenario later on.
+
+
 ### Step 5 - Configure Ingress to access the application
 
 ```bash
@@ -235,7 +238,7 @@ On the application web page add a product. Any id and name is fine.
 
 Sample output
 
-Refresh the page and notice that the vendors list somestimes shows `ABC.com` and sometimes both `ABC.com` and `XYZ.com`. This is because the product data is persisted in the Product Catalog microservice and the vendor information is persisted in the Catalog Detail microservice. When you add a product to the list, Product Catalog microservice sends a request to one of the Catalog Detail  persists a random vendor information data 
+Refresh the page and notice that the vendors list sometimes shows `ABC.com` only and some other times both `ABC.com` and `XYZ.com`. This is because the product data is persisted in the `Product Catalog` microservice and the vendor information is persisted in the `Catalog Detail` microservice. When you add a product to the list, the randomized vendor information for the product you added gets persisted on one of the `catalogdetail` pods. Either `catalogdetail-...` pod which is part of `catalogdetail` deployment or `catalogdetail2-...` pod which is part of the `catalogdetail2` deployment.
 
 
 ### Step X - Deploy Traffic Shifting Policy (CiliumEnvoyConfig)
