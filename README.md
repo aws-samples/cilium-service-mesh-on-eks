@@ -193,7 +193,7 @@ Sample output
 
 ### Step 7 - Create deployment specific services
 
-To test traffic management capabilities of Cilium we will create two additional services. 
+To test traffic management capabilities of Cilium we will create two additional Kubernetes service resources. `catalogdetailv1` service will be selecting the pods within the `catalogdetail` deployment. `catalogdetailv2` service will be selecting the pods within the `catalogdetail2`deployment.
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -241,14 +241,16 @@ SAMPLE SCREENSHOT / SAMPLE SCREENSHOT / SAMPLE SCREENSHOT
 Refresh the page and notice that the vendors list sometimes shows `ABC.com` only and some other times both `ABC.com` and `XYZ.com`. This is because the product information is persisted in the `Product Catalog` microservice and the vendor information is persisted in the `Catalog Detail` microservice. When you add a product to the list, the randomized vendor information for the product you added gets persisted on one of the `catalogdetail` pods. Either `catalogdetail-...` pod which is part of `catalogdetail` deployment or `catalogdetail2-...` pod which is part of the `catalogdetail2` deployment.
 
 
-### Step X - Deploy Traffic Shifting Policy (CiliumEnvoyConfig)
+### Step X - Deploy Traffic Management Policy (CiliumEnvoyConfig)
+
+Let' s now define a traffic management policy to send half of the requests to the `catalogdetailv1` service and the other half to the `catalogdetailv2` service. 
 
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: cilium.io/v2
 kind: CiliumEnvoyConfig
 metadata:
-  name: traffic-shifting-test
+  name: traffic-management-test
   namespace: workshop
 spec:
   services:
@@ -314,10 +316,27 @@ EOF
 
 ### Step X - Test access from ProductCatalog service to CatalogDetail service
 
+Let' s send requests from the `Product Catalog` microservice to `Catalog Detail` microservice and see that there is an even distribution of requests to both deployments of the `Catalog Detail` microservice. 
+
 ```bash
 for i in {1..6}; do echo "Output $i:"; kubectl -n workshop exec -it productcatalog-64848f7996-bh7ch -- curl catalogdetail:3000/catalogDetail; echo ""; done
 ```
 
+Sample output
+```
+Output 1:
+{"version":"2","vendors":["ABC.com, XYZ.com"]}
+Output 2:
+{"version":"1","vendors":["ABC.com"]}
+Output 3:
+{"version":"2","vendors":["ABC.com, XYZ.com"]}
+Output 4:
+{"version":"2","vendors":["ABC.com, XYZ.com"]}
+Output 5:
+{"version":"1","vendors":["ABC.com"]}
+Output 6:
+{"version":"1","vendors":["ABC.com"]}
+```
 
 ### Step X - Uninstall Product Catalog Application and Cilium
 
