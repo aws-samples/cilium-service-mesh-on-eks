@@ -74,7 +74,6 @@ Sample Output
 ```
 Release "cilium" does not exist. Installing it now.
 NAME: cilium
-LAST DEPLOYED: Wed Feb 21 23:46:36 2024
 NAMESPACE: kube-system
 STATUS: deployed
 REVISION: 1
@@ -107,7 +106,21 @@ helm install productapp . -n workshop
 
 Sample Output
 ```
+namespace/workshop created
+NAME: productapp
+NAMESPACE: workshop
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+Product Catalog Application is succesfully installed !
 
+1. Get the application URL by running the following command:
+  
+  CILIUM_INGRESS_URL=$(kubectl get svc cilium-ingress -n kube-system -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
+  echo "http://$CILIUM_INGRESS_URL"
+
+2. Once you configure the ingress in the next step you will be able to access this URL in a terminal using "curl" or via a browser window
 ```
 
 ### Step 5 - Configure Ingress to access the application
