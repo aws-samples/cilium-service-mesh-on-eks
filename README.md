@@ -9,6 +9,7 @@ This project shows the steps involved to implement the solution architecture exp
 	- [ ] [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
    	- [ ] [Terraform](https://developer.hashicorp.com/terraform/install)
   	- [ ] [kubectl](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html)
+  	- [ ] [Cilium CLI](https://docs.cilium.io/en/stable/gettingstarted/k8s-install-default/#install-the-cilium-cli)
 
 Assumption : You already configured a [default] in the AWS CLI config/credentials files.
 
@@ -190,6 +191,10 @@ echo "http://$CILIUM_INGRESS_URL"
 Access the application URL either using `curl` or a browser. You should see the following web page.
 
 Sample output
+
+### Step 7 - Access Cilium Hubble UI for Service Map Visualization
+
+You can use Cilium Hubble to visualize service dependencies. You will need Cilium client in your 
 
 ### Step 7 - Create deployment specific services
 
