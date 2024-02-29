@@ -263,7 +263,7 @@ cat <<EOF | kubectl apply -f -
 apiVersion: cilium.io/v2
 kind: CiliumEnvoyConfig
 metadata:
-  name: traffic-management-test
+  name: traffic-shifting-test
   namespace: workshop
 spec:
   services:
