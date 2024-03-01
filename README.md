@@ -187,7 +187,7 @@ service/frontend          ClusterIP   172.20.95.212    <none>        9000/TCP   
 > Notice that there are two deployments for the `Catalog Detail` microservice; `catalogdetail` and `catalogdetail2`. The `catalogdetail` Kubernetes service points out to both `catalogdetail-....` and `catalogdetail2-....` pods.  Meaning that a request from the `productcatalog-.....` Pod to the `catalogdetail` service can get forwarded to any of those Pods. You can verify this by checking the `kubectl describe service catalogdetail` output. This is important to note since it will become relevant in the traffic shifting scenario later on.
 
 
-### Step 5 - Configure Ingress to access the application
+### Step 6 - Configure Ingress to access the application
 
 We will now configure an Ingress which will be fulfilled by Cilium Ingress controller. 
 
@@ -218,7 +218,7 @@ Sample Output
 ingress.networking.k8s.io/productappingress created
 ```
 
-### Step 6 - Access the Product Catalog Application
+### Step 7 - Access the Product Catalog Application
 
 Get the URL to access the application. 
 
@@ -236,7 +236,7 @@ Access the application URL either using `curl` or a browser. You should see the 
 
 ![](images/application_ui.png)
 
-### Step 7 - Access Cilium Hubble UI for Service Map Visualization
+### Step 8 - Access Cilium Hubble UI for Service Map Visualization
 
 You can use Cilium Hubble to visualize service dependencies. Use the commands in the following command snippet. You will see a new browser tab automatically being spun up and see the Hubble UI on that page. Select `workshop` namespace in there.
 
@@ -256,7 +256,7 @@ Sample Screenshot
 > [!NOTE]  
 > You may need to refresh the web page if the Hubble user interface does not show up after a few seconds.
 
-### Step 8 - Add a product on the web page
+### Step 9 - Add a product on the web page
 
 Access the application URL again and add a product. Any id and name is fine. One you add the product, Refresh the page couple of times and you will notice that the vendors list sometimes shows `ABC.com` only and some other times both `ABC.com` and `XYZ.com`. But why ? 
 
@@ -269,7 +269,7 @@ The reason is remember there are two deployments for the `Catalog Detail` micros
 
 This is why you are seeing the vendor information changing when you refresh the page. We will leverage this state in the upcoming traffic shifting example.
 
-### Step 9 - Create deployment specific services for the `Catalog Detail` microservice
+### Step 10 - Create deployment specific services for the `Catalog Detail` microservice
 
 To test traffic shifting capabilities of Cilium we will create two additional Kubernetes service resources. `catalogdetailv1` service will be backed by the pods within the `catalogdetail` deployment. `catalogdetailv2` service will be backed by the pods within the `catalogdetail2`deployment.
 
@@ -312,7 +312,7 @@ EOF
 ```
 
 
-### Step 10 - Implement Layer 7 Traffic Shifting Policy using `CiliumEnvoyConfig`` Custom Resource Definition (CRD)
+### Step 11 - Implement Layer 7 Traffic Shifting Policy using `CiliumEnvoyConfig`` Custom Resource Definition (CRD)
 
 Let' s now define a traffic shifting policy to send exactly 50% of the requests to the `catalogdetailv1` service and 50% to the `catalogdetailv2` service. 
 
@@ -385,7 +385,7 @@ spec:
 EOF
 ```
 
-### Step 11 - Access `Catalog Detail` microservice
+### Step 12 - Access `Catalog Detail` microservice
 
 Let' s send requests from the `Product Catalog` microservice to `Catalog Detail` microservice and see that there is an **exactly even distribution** (50/50) of requests to both deployments of the `Catalog Detail` microservice. 
 
@@ -412,7 +412,7 @@ Output 6:
 
 As shown above out of six requests, three of them are sent to `catalogdetail` and the other three are sent to `catalogdetail2`. 
 
-### Step 12 - Uninstall Product Catalog Application and Cilium
+### Step 13 - Uninstall Product Catalog Application and Cilium
 
 ```
 helm uninstall productapp -n workshop
@@ -430,7 +430,7 @@ service "catalogdetailv1" deleted
 service "catalogdetailv2" deleted
 ```
 
-### Step 13 - Destroy the environment
+### Step 14 - Destroy the environment
 
 Make sure you are in the `terraform` path on your shell and then use the commands in the below snippet. The destroy process takes several minutes to complete.
 
