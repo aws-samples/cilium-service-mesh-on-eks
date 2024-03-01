@@ -39,9 +39,12 @@ Outputs:
 configure_kubectl = "aws eks --region us-west-2 update-kubeconfig --name terraform"
 ```
 
-It takes ~15 minutes for an EKS cluster creation process to complete. Update kubeconfig using the command provided in the Terraform output. 
+It takes ~15 minutes for an EKS cluster creation process to complete. 
 
-Verify that the worker nodes status is `Ready` by doing `kubectl get nodes`.
+> [!NOTE]  
+> Update you kubeconfig file using the command provided in the Terraform output to access the Kubernetes API.
+
+Verify that the worker nodes status is `Ready` by `kubectl get nodes`.
 
 ### Step 3 - Deploy Cilium on EKS cluster with Helm
 
@@ -87,13 +90,25 @@ Your release version is 1.14.7.
 For any further help, visit https://docs.cilium.io/en/v1.14/gettinghelp
 ```
 
-- A few parameters worth mentioning from above : 
-  - We replace kube-proxy functionality with Cilium' s own eBPF based implementation.
-  - We enable Cilium Ingress Controller.
-    - We use a specific annotation from values_cilium.yaml so that Cilium Ingress can be exposed through an AWS Network Load Balancer.
-  - We enable Hubble.
-- Verify with `kubectl get pods -A` that status of Cilium pods and Cilium agents are `Running` state.
-- Verify with `kubectl get svc -A` that the `cilium-ingress` service has an AWS load balancer DNS name assigned to it (in the `EXTERNAL-IP` of the output.
+- A few of the parameters above worth mentioning : 
+  - `kubeProxyReplacement=strict` - We replace kube-proxy functionality with Cilium' s own eBPF based implementation.
+  - `ingressController.enabled=true` - We enable Cilium Ingress Controller.
+    - `reuse-values -f ~/cilium-mesh-on-eks/values_cilium.yaml` - We use a specific annotation from values_cilium.yaml so that Cilium Ingress can be exposed through an AWS Network Load Balancer.
+  - `hubble.enabled=true` - We enable Hubble.
+
+Verify that Cilium Pods and agents are in `Running` state by `kubectl get pods -A`.
+
+Verify that the `cilium-ingress` service has an AWS DNS name assigned to it in the `EXTERNAL-IP` column of the output for `kubectl get svc -A`.
+
+Sample Output
+```
+NAMESPACE     NAME                                TYPE           CLUSTER-IP       EXTERNAL-IP                                                                     PORT(S)                      AGE
+...
+OUTPUT TRUNCATED
+kube-system   cilium-ingress                      LoadBalancer   172.20.6.189     k8s-kubesyst-ciliumin-849dd6c7c1-36d537f75e9357d8.elb.us-west-2.amazonaws.com   80:32741/TCP,443:30873/TCP   20m
+OUTPUT TRUNCATED
+...
+```
 
 ### Step 4 - Deploy Product Catalog Application
 
@@ -114,25 +129,20 @@ STATUS: deployed
 REVISION: 1
 TEST SUITE: None
 NOTES:
-Product Catalog Application is succesfully installed !
-
-1. Get the application URL by running the following command:
-  
-  CILIUM_INGRESS_URL=$(kubectl get svc cilium-ingress -n kube-system -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
-  echo "http://$CILIUM_INGRESS_URL"
-
-2. Once you configure the ingress in the next step you will be able to access this URL in a terminal using "curl" or via a browser window
 ```
 
 ### Step 5 - Investigate the Product Catalog Application
 
 Application architecture is as shown below. 
 
-APP ARCHICTURE DIAGRAM HERE / APP ARCHICTURE DIAGRAM HERE / APP ARCHICTURE DIAGRAM HERE
+![](images/application_architecture.png)
 
 The user accesses `Frontend` microservice, then `Frontend` microservice calls the `Product Catalog` service, and then `Product Catalog` service calls the `Catalog Detail` microservice. The `Catalog Detail` microservice is comprised of two different deployments which are actually identical. The reason we use two deployments is to demonstrate traffic shifting capabilities of service mesh at a later step. 
 
-Have a look at the resources deployed as part of the `Product Catalog Application`. 
+> [!NOTE]  
+> The user access to `Frontend` microservice will be implemented in the next step when we configure Ingress.
+
+Have a look at the current resources deployed as part of the `Product Catalog Application`. 
 
 ```
 kubectl get deployment,pod,service  -n workshop
@@ -157,10 +167,13 @@ service/catalogdetail     ClusterIP   172.20.15.14     <none>        3000/TCP   
 service/frontend          ClusterIP   172.20.95.212    <none>        9000/TCP   21m
 ```
 
-Notice that there are two deployments for the `Catalog Detail` microservice; `catalogdetail` and `catalogdetail2`. The `catalogdetail` Kubernetes service points out to both `catalogdetail-....` and `catalogdetail2-....` pods.  Meaning that a request from the `productcatalog-.....` pod to the `catalogdetail` service can get forwarded to any of those pods. You can verify this by checking the `kubectl describe service catalogdetail` output. This is important to note since it will become relevant in the traffic shifting scenario later on.
+> [!NOTE]  
+> Notice that there are two deployments for the `Catalog Detail` microservice; `catalogdetail` and `catalogdetail2`. The `catalogdetail` Kubernetes service points out to both `catalogdetail-....` and `catalogdetail2-....` pods.  Meaning that a request from the `productcatalog-.....` Pod to the `catalogdetail` service can get forwarded to any of those Pods. You can verify this by checking the `kubectl describe service catalogdetail` output. This is important to note since it will become relevant in the traffic shifting scenario later on.
 
 
 ### Step 5 - Configure Ingress to access the application
+
+We will now configure an Ingress which will be fulfilled by Cilium Ingress controller. 
 
 ```
 cat <<EOF | kubectl apply -f -
@@ -184,6 +197,11 @@ spec:
 EOF
 ```
 
+Sample Output
+```
+ingress.networking.k8s.io/productappingress created
+```
+
 ### Step 6 - Access the Product Catalog Application
 
 Get the URL to access the application. 
@@ -193,25 +211,48 @@ CILIUM_INGRESS_URL=$(kubectl get svc cilium-ingress -n kube-system -o jsonpath='
 echo "http://$CILIUM_INGRESS_URL"
 ```
 
+Sample Output
+```
+http://k8s-kubesyst-ciliumin-1234567-1234567.elb.us-west-2.amazonaws.com
+```
+
 Access the application URL either using `curl` or a browser. You should see the following web page.
 
-Sample output
+![](images/application_ui.png)
 
 ### Step 7 - Access Cilium Hubble UI for Service Map Visualization
 
 You can use Cilium Hubble to visualize service dependencies. Use the commands in the following command snippet. You will see a new browser tab automatically being spun up and see the Hubble UI on that page. Select `workshop` namespace in there.
 
-Below is a sample screenshot.
+```
+cilium hubble ui
+```
 
-HUBBLE SCREENSHOT / HUBBLE SCREENSHOT / HUBBLE SCREENSHOT / HUBBLE SCREENSHOT
+Sample Output
+```
+ℹ️  Opening "http://localhost:12000" in your browser...
+```
+
+Sample Screenshot
+
+![](images/hubble.png)
+
+### Step 8 - Add a product on the web page
+
+Access the application URL again and add a product. Any id and name is fine. One you add the product, Refresh the page couple of times and you will notice that the vendors list sometimes shows `ABC.com` only and some other times both `ABC.com` and `XYZ.com`. But why ? 
+
+Sample Screenshot
+
+![](images/product_addition.png)
 
 
+The reason is remember there are two deployments for the `Catalog Detail` microservice, one is `catalogdetail` and the other is `catalogdetail2`. The product information is persisted in the `Product Catalog` microservice and the vendor information is persisted in the `Catalog Detail` microservice. Hence when you add a product, due to the way application is architected, the `Product Catalog` microservice sends a request to `Catalog Detail` microservice to persist the vendor information for the product. However this request is sent to the `catalog` detail Kubernetes service hence it is load balanced to either `catalogdetail` or `catalogdetail2` in random. The result is that of the vendor information, of the product you just added, will be persisted in **only one of** the deployments of the `catalogdetail` microservice. 
 
+This is why you are seeing the vendor information changing when you refresh the page. We will leverage this state in the upcoming traffic shifting example.
 
+### Step 9 - Create deployment specific services for the `Catalog Detail` microservice
 
-### Step 8 - Create deployment specific services
-
-To test traffic shifting capabilities of Cilium we will create two additional Kubernetes service resources. `catalogdetailv1` service will be selecting the pods within the `catalogdetail` deployment. `catalogdetailv2` service will be selecting the pods within the `catalogdetail2`deployment.
+To test traffic shifting capabilities of Cilium we will create two additional Kubernetes service resources. `catalogdetailv1` service will be backed by the pods within the `catalogdetail` deployment. `catalogdetailv2` service will be backed by the pods within the `catalogdetail2`deployment.
 
 ```
 cat <<EOF | kubectl apply -f -
@@ -250,18 +291,11 @@ spec:
     version: v2
 EOF
 ```
-### Step 8 - Add a product on the web page
-
-On the application web page add a product. Any id and name is fine. 
-
-SAMPLE SCREENSHOT / SAMPLE SCREENSHOT / SAMPLE SCREENSHOT 
-
-Refresh the page and notice that the vendors list sometimes shows `ABC.com` only and some other times both `ABC.com` and `XYZ.com`. This is because the product information is persisted in the `Product Catalog` microservice and the vendor information is persisted in the `Catalog Detail` microservice. When you add a product to the list, the randomized vendor information for the product you added gets persisted on one of the `catalogdetail` pods. Either `catalogdetail-...` pod which is part of `catalogdetail` deployment or `catalogdetail2-...` pod which is part of the `catalogdetail2` deployment.
 
 
-### Step X - Deploy Traffic Management Policy (CiliumEnvoyConfig)
+### Step 10 - Implement Layer 7 Traffic Shifting Policy using `CiliumEnvoyConfig`` Custom Resource Definition (CRD)
 
-Let' s now define a traffic management policy to send half of the requests to the `catalogdetailv1` service and the other half to the `catalogdetailv2` service. 
+Let' s now define a traffic shifting policy to send exactly 50% of the requests to the `catalogdetailv1` service and 50% to the `catalogdetailv2` service. 
 
 ```
 cat <<EOF | kubectl apply -f -
@@ -332,9 +366,9 @@ spec:
 EOF
 ```
 
-### Step X - Test access from ProductCatalog service to CatalogDetail service
+### Step 11 - Test access from `Product Catalog` microservice to `Catalog Detail` microservice
 
-Let' s send requests from the `Product Catalog` microservice to `Catalog Detail` microservice and see that there is an even distribution of requests to both deployments of the `Catalog Detail` microservice. 
+Let' s send requests from the `Product Catalog` microservice to `Catalog Detail` microservice and see that there is an **exactly even distribution** (50/50) of requests to both deployments of the `Catalog Detail` microservice. 
 
 ```
 for i in {1..6}; do echo "Output $i:"; kubectl -n workshop exec -it productcatalog-64848f7996-bh7ch -- curl catalogdetail:3000/catalogDetail; echo ""; done
@@ -356,7 +390,9 @@ Output 6:
 {"version":"1","vendors":["ABC.com"]}
 ```
 
-### Step X - Uninstall Product Catalog Application and Cilium
+As shown above out of six requests, three of them are sent to `catalogdetail` and the other three are sent to `catalogdetail2`. 
+
+### Step 12 - Uninstall Product Catalog Application and Cilium
 
 ```
 helm uninstall productapp -n workshop
@@ -368,17 +404,15 @@ helm uninstall cilium -n kube-system
 
 Sample Output
 ```
-kubectl delete ingress productappingress -n workshop
-kubectl delete svc catalogdetailv1 -n workshop
-kubectl delete svc catalogdetailv2 -n workshop
-helm uninstall cilium -n kube-system
 release "productapp" uninstalled
 ingress.networking.k8s.io "productappingress" deleted
 service "catalogdetailv1" deleted
 service "catalogdetailv2" deleted
 ```
 
-### Step X - Destroy
+### Step 13 - Destroy the environment
+
+Make sure you are in the `terraform` path on your shell and then use the commands in the below snippet. The destroy process takes several minutes to complete.
 
 ```
 # Necessary to avoid removing Terraform's permissions too soon before its finished
@@ -389,10 +423,36 @@ terraform state rm 'module.eks.aws_eks_access_policy_association.this["cluster_c
 terraform destroy -target="module.eks_blueprints_addons" -auto-approve
 terraform destroy -target="module.eks" -auto-approve
 terraform destroy -auto-approve
+````
+
+SampleOutput
+
 ```
+Removed module.eks.aws_eks_access_entry.this["cluster_creator"]
+Successfully removed 1 resource instance(s).
+Removed module.eks.aws_eks_access_policy_association.this["cluster_creator_admin"]
+Successfully removed 1 resource instance(s).
+module.eks.data.aws_caller_identity.current: Reading...
+module.eks_blueprints_addons.module.aws_load_balancer_controller.data.aws_caller_identity.current[0]: Reading...
+data.aws_availability_zones.available: Reading...
+module.eks_blueprints_addons.data.aws_region.current: Reading...
+module.eks.data.aws_iam_policy_document.assume_role_policy[0]: Reading...
+module.eks_blueprints_addons.data.aws_partition.current: Reading...
+module.eks_blueprints_addons.data.aws_caller_identity.current: Reading...
+module.eks.module.kms.data.aws_caller_identity.current[0]: Reading...
+module.eks.aws_cloudwatch_log_group.this[0]: Refresh
 
+OUTPUT TRUNCATED
 
+module.vpc.aws_vpc.this[0]: Destruction complete after 2s
+╷
+│ Warning: EC2 Default Network ACL (acl-06fc00dc625dcde96) not deleted, removing from state
+│ 
+│ 
+╵
 
+Destroy complete! Resources: 23 destroyed.
+```
 ## 🔐 Security
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
