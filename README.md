@@ -436,10 +436,8 @@ Use the commands below to destroy the environment. The process takes several min
 
 ```
 cd ..
-cd terraform17
+cd terraform
 
-# Necessary to avoid removing Terraform's permissions too soon before its finished
-# cleaning up the resources it deployed inside the cluster
 terraform state rm 'module.eks.aws_eks_access_entry.this["cluster_creator"]' || true
 terraform state rm 'module.eks.aws_eks_access_policy_association.this["cluster_creator_admin"]' || true
 
@@ -447,6 +445,9 @@ terraform destroy -target="module.eks_blueprints_addons" -auto-approve
 terraform destroy -target="module.eks" -auto-approve
 terraform destroy -auto-approve
 ````
+
+> [!NOTE]  
+> The first two terrafom state removal commands are necessary to avoid removing Terraform's permissions too soon before it finishes cleaning up the resources it deployed inside the cluster.
 
 SampleOutput
 
