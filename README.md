@@ -432,9 +432,12 @@ service "catalogdetailv2" deleted
 
 ### Step 14 - Destroy the environment
 
-Make sure you are in the `terraform` path on your shell and then use the commands in the below snippet. The destroy process takes several minutes to complete.
+Use the commands below to destroy the environment. The process takes several minutes to complete.
 
 ```
+cd ..
+cd terraform17
+
 # Necessary to avoid removing Terraform's permissions too soon before its finished
 # cleaning up the resources it deployed inside the cluster
 terraform state rm 'module.eks.aws_eks_access_entry.this["cluster_creator"]' || true
