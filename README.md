@@ -111,6 +111,21 @@ OUTPUT TRUNCATED
 ...
 ```
 
+#### Step 3.1 (Optional) - Delete `kube-proxy`
+
+Since Cilium replaces `kube-proxy` you can delete it on the EKS cluster by using the commands below.
+
+```
+currentdir=$(basename $PWD)
+aws eks delete-addon --cluster-name $currentdir --addon-name kube-proxy --region us-west-2
+```
+
+You can confirm the deletion by performing the following command. You should see only `coredns` and `vpc-cni` in the output. 
+
+```
+watch aws eks list-addons --cluster-name terraform us-west-2
+```
+
 ### Step 4 - Deploy Product Catalog Application
 
 ```
@@ -370,7 +385,7 @@ spec:
 EOF
 ```
 
-### Step 11 - Test access from `Product Catalog` microservice to `Catalog Detail` microservice
+### Step 11 - Access `Catalog Detail` microservice
 
 Let' s send requests from the `Product Catalog` microservice to `Catalog Detail` microservice and see that there is an **exactly even distribution** (50/50) of requests to both deployments of the `Catalog Detail` microservice. 
 
