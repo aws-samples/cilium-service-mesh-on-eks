@@ -91,7 +91,7 @@ For any further help, visit https://docs.cilium.io/en/v1.14/gettinghelp
 ```
 
 - A few of the parameters above worth mentioning : 
-  - `kubeProxyReplacement=strict` - We replace kube-proxy functionality with Cilium' s own eBPF based implementation.
+  - `kubeProxyReplacement=strict` - We replace kube-proxy functionality with Cilium' s own eBPF based implementation. 
   - `ingressController.enabled=true` - We enable Cilium Ingress Controller.
     - `reuse-values -f ~/cilium-mesh-on-eks/values_cilium.yaml` - We use a specific annotation from values_cilium.yaml so that Cilium Ingress can be exposed through an AWS Network Load Balancer.
   - `hubble.enabled=true` - We enable Hubble.
