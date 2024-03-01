@@ -130,7 +130,7 @@ Application architecture is as shown below.
 
 APP ARCHICTURE DIAGRAM HERE / APP ARCHICTURE DIAGRAM HERE / APP ARCHICTURE DIAGRAM HERE
 
-The user accesses `Frontend` microservice, then `Frontend` microservice calls the `Product Catalog` service, and then `Product Catalog` service calls the `Catalog Detail` microservice. The `Catalog Detail` microservice is comprised of two different deployments which are actually identical. The reason we use two deployments is to demonstrate traffic management capabilities of service mesh at a later step. 
+The user accesses `Frontend` microservice, then `Frontend` microservice calls the `Product Catalog` service, and then `Product Catalog` service calls the `Catalog Detail` microservice. The `Catalog Detail` microservice is comprised of two different deployments which are actually identical. The reason we use two deployments is to demonstrate traffic shifting capabilities of service mesh at a later step. 
 
 Use `kubectl get deployment,pod,service  -n workshop` to have a look at the resources deployed as part of the `Product Catalog Application`. 
 
@@ -152,7 +152,7 @@ service/catalogdetail     ClusterIP   172.20.15.14     <none>        3000/TCP   
 service/frontend          ClusterIP   172.20.95.212    <none>        9000/TCP   21m
 ```
 
-Notice that there are two deployments for the `Catalog Detail` microservice; `catalogdetail` and `catalogdetail2`. The `catalogdetail` Kubernetes service points out to both `catalogdetail-....` and `catalogdetail2-....` pods.  Meaning that a request from the `productcatalog-.....` pod to the `catalogdetail` service can get forwarded to any of those pods. You can verify this by checking the `kubectl describe service catalogdetail` output. This is important to note since it will become relevant in the traffic management scenario later on.
+Notice that there are two deployments for the `Catalog Detail` microservice; `catalogdetail` and `catalogdetail2`. The `catalogdetail` Kubernetes service points out to both `catalogdetail-....` and `catalogdetail2-....` pods.  Meaning that a request from the `productcatalog-.....` pod to the `catalogdetail` service can get forwarded to any of those pods. You can verify this by checking the `kubectl describe service catalogdetail` output. This is important to note since it will become relevant in the traffic shifting scenario later on.
 
 
 ### Step 5 - Configure Ingress to access the application
@@ -206,7 +206,7 @@ HUBBLE SCREENSHOT / HUBBLE SCREENSHOT / HUBBLE SCREENSHOT / HUBBLE SCREENSHOT
 
 ### Step 8 - Create deployment specific services
 
-To test traffic management capabilities of Cilium we will create two additional Kubernetes service resources. `catalogdetailv1` service will be selecting the pods within the `catalogdetail` deployment. `catalogdetailv2` service will be selecting the pods within the `catalogdetail2`deployment.
+To test traffic shifting capabilities of Cilium we will create two additional Kubernetes service resources. `catalogdetailv1` service will be selecting the pods within the `catalogdetail` deployment. `catalogdetailv2` service will be selecting the pods within the `catalogdetail2`deployment.
 
 ```bash
 cat <<EOF | kubectl apply -f -
