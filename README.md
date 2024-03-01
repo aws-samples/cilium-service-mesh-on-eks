@@ -132,9 +132,14 @@ APP ARCHICTURE DIAGRAM HERE / APP ARCHICTURE DIAGRAM HERE / APP ARCHICTURE DIAGR
 
 The user accesses `Frontend` microservice, then `Frontend` microservice calls the `Product Catalog` service, and then `Product Catalog` service calls the `Catalog Detail` microservice. The `Catalog Detail` microservice is comprised of two different deployments which are actually identical. The reason we use two deployments is to demonstrate traffic shifting capabilities of service mesh at a later step. 
 
-Use `kubectl get deployment,pod,service  -n workshop` to have a look at the resources deployed as part of the `Product Catalog Application`. 
+Have a look at the resources deployed as part of the `Product Catalog Application`. 
 
 ```bash
+kubectl get deployment,pod,service  -n workshop
+```
+
+Sample Output
+```
 NAME                             READY   UP-TO-DATE   AVAILABLE   AGE
 deployment.apps/catalogdetail    1/1     1            1           21m
 deployment.apps/catalogdetail2   1/1     1            1           21m
