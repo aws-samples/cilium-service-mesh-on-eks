@@ -375,7 +375,8 @@ EOF
 Let' s send requests from the `Product Catalog` microservice to `Catalog Detail` microservice and see that there is an **exactly even distribution** (50/50) of requests to both deployments of the `Catalog Detail` microservice. 
 
 ```
-for i in {1..6}; do echo "Output $i:"; kubectl -n workshop exec -it productcatalog-64848f7996-bh7ch -- curl catalogdetail:3000/catalogDetail; echo ""; done
+productcatalogpod=$(kubectl get pods -n workshop | awk '{print $1}' | grep -e "productcatalog")
+for i in {1..6}; do echo "Output $i:"; kubectl -n workshop exec -it $productcatalogpod -- curl catalogdetail:3000/catalogDetail; echo ""; done
 ```
 
 Sample output
