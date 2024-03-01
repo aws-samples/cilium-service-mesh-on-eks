@@ -366,7 +366,17 @@ kubectl delete svc catalogdetailv2 -n workshop
 helm uninstall cilium -n kube-system
 ```
 
-
+Sample Output
+```
+kubectl delete ingress productappingress -n workshop
+kubectl delete svc catalogdetailv1 -n workshop
+kubectl delete svc catalogdetailv2 -n workshop
+helm uninstall cilium -n kube-system
+release "productapp" uninstalled
+ingress.networking.k8s.io "productappingress" deleted
+service "catalogdetailv1" deleted
+service "catalogdetailv2" deleted
+```
 
 ### Step X - Destroy
 
@@ -380,6 +390,8 @@ terraform destroy -target="module.eks_blueprints_addons" -auto-approve
 terraform destroy -target="module.eks" -auto-approve
 terraform destroy -auto-approve
 ```
+
+
 
 ## 🔐 Security
 
