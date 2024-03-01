@@ -17,14 +17,14 @@ Assumption : You already configured a [default] in the AWS CLI config/credential
 
 ### Step 1 - Clone this GitHub repo to your machine
 
-```bash
+```
 git clone https://github.com/aws-samples/cilium-mesh-on-eks/
 cd cilium-mesh-on-eks
 ```
 
 ### Step 2 - Deploy EKS cluster with Terraform
 
-```bash
+```
 cd terraform
 terraform init
 terraform apply --auto-approve
@@ -97,7 +97,7 @@ For any further help, visit https://docs.cilium.io/en/v1.14/gettinghelp
 
 ### Step 4 - Deploy Product Catalog Application
 
-```bash
+```
 kubectl create namespace workshop
 
 cd .. 
@@ -134,7 +134,7 @@ The user accesses `Frontend` microservice, then `Frontend` microservice calls th
 
 Have a look at the resources deployed as part of the `Product Catalog Application`. 
 
-```bash
+```
 kubectl get deployment,pod,service  -n workshop
 ```
 
@@ -162,7 +162,7 @@ Notice that there are two deployments for the `Catalog Detail` microservice; `ca
 
 ### Step 5 - Configure Ingress to access the application
 
-```bash
+```
 cat <<EOF | kubectl apply -f -
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -188,7 +188,7 @@ EOF
 
 Get the URL to access the application. 
 
-```bash
+```
 CILIUM_INGRESS_URL=$(kubectl get svc cilium-ingress -n kube-system -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
 echo "http://$CILIUM_INGRESS_URL"
 ```
@@ -213,7 +213,7 @@ HUBBLE SCREENSHOT / HUBBLE SCREENSHOT / HUBBLE SCREENSHOT / HUBBLE SCREENSHOT
 
 To test traffic shifting capabilities of Cilium we will create two additional Kubernetes service resources. `catalogdetailv1` service will be selecting the pods within the `catalogdetail` deployment. `catalogdetailv2` service will be selecting the pods within the `catalogdetail2`deployment.
 
-```bash
+```
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Service
@@ -263,7 +263,7 @@ Refresh the page and notice that the vendors list sometimes shows `ABC.com` only
 
 Let' s now define a traffic management policy to send half of the requests to the `catalogdetailv1` service and the other half to the `catalogdetailv2` service. 
 
-```bash
+```
 cat <<EOF | kubectl apply -f -
 apiVersion: cilium.io/v2
 kind: CiliumEnvoyConfig
@@ -336,7 +336,7 @@ EOF
 
 Let' s send requests from the `Product Catalog` microservice to `Catalog Detail` microservice and see that there is an even distribution of requests to both deployments of the `Catalog Detail` microservice. 
 
-```bash
+```
 for i in {1..6}; do echo "Output $i:"; kubectl -n workshop exec -it productcatalog-64848f7996-bh7ch -- curl catalogdetail:3000/catalogDetail; echo ""; done
 ```
 
@@ -358,7 +358,7 @@ Output 6:
 
 ### Step X - Uninstall Product Catalog Application and Cilium
 
-```bash
+```
 helm uninstall productapp -n workshop
 kubectl delete ingress productappingress -n workshop
 kubectl delete svc catalogdetailv1 -n workshop
@@ -370,7 +370,7 @@ helm uninstall cilium -n kube-system
 
 ### Step X - Destroy
 
-```bash
+```
 # Necessary to avoid removing Terraform's permissions too soon before its finished
 # cleaning up the resources it deployed inside the cluster
 terraform state rm 'module.eks.aws_eks_access_entry.this["cluster_creator"]' || true
