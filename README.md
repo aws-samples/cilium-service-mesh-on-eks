@@ -238,6 +238,9 @@ Sample Screenshot
 
 ![](images/hubble.png)
 
+> [!NOTE]  
+> You may need to refresh the web page if the Hubble user interface does not show up after a few seconds.
+
 ### Step 8 - Add a product on the web page
 
 Access the application URL again and add a product. Any id and name is fine. One you add the product, Refresh the page couple of times and you will notice that the vendors list sometimes shows `ABC.com` only and some other times both `ABC.com` and `XYZ.com`. But why ? 
