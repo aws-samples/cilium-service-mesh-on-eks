@@ -92,7 +92,7 @@ For any further help, visit https://docs.cilium.io/en/v1.14/gettinghelp
   - We enable Cilium Ingress Controller.
     - We use a specific annotation from values_cilium.yaml so that Cilium Ingress can be exposed through an AWS Network Load Balancer.
   - We enable Hubble.
-- Verify with `kubectl get pods -A` that status of cilium pods and cilium agents are `Running` state.
+- Verify with `kubectl get pods -A` that status of Cilium pods and Cilium agents are `Running` state.
 - Verify with `kubectl get svc -A` that the `cilium-ingress` service has an AWS load balancer DNS name assigned to it (in the `EXTERNAL-IP` of the output.
 
 ### Step 4 - Deploy Product Catalog Application
