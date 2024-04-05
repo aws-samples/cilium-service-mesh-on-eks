@@ -52,7 +52,7 @@ Verify that the worker nodes status is `Ready` by `kubectl get nodes`.
 helm repo add cilium https://helm.cilium.io/
 helm upgrade --install cilium cilium/cilium --version 1.14.7 \
 --namespace kube-system \
---reuse-values -f values_cilium.yaml \
+--reuse-values -f ../values_cilium.yaml \
 --set hubble.enabled=true \
 --set hubble.tls.auto.enabled=true \
 --set hubble.metrics.enabled="{dns,drop,tcp,flow,icmp,http}" \
