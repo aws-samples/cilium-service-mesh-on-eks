@@ -76,9 +76,8 @@ helm upgrade --install cilium cilium/cilium --version 1.14.7 \
 --set cni.install=true
 ```
 
-Sample Output
-
-```plaintext
+Sample Output:
+```
 Release "cilium" does not exist. Installing it now.
 NAME: cilium
 NAMESPACE: kube-system
@@ -91,7 +90,7 @@ You have successfully installed Cilium with Hubble Relay and Hubble UI.
 Your release version is 1.14.7.
 
 For any further help, visit https://docs.cilium.io/en/v1.14/gettinghelp
-
+```
 
 A few things worth mentioning : 
   - `kubeProxyReplacement=strict` - We replace kube-proxy functionality with Cilium' s own eBPF based implementation. 
@@ -106,7 +105,7 @@ Verify that Cilium Pods and agents are in `Running` state by listing all the pod
 kubectl get pods -A
 ```
 Sample Output:
-```plaintext
+```
 NAMESPACE     NAME                                           READY   STATUS    RESTARTS   AGE
 kube-system   aws-load-balancer-controller-999bf8598-wmdcr   1/1     Running   0          112m
 kube-system   aws-load-balancer-controller-999bf8598-z5gfn   1/1     Running   0          112m
@@ -128,14 +127,14 @@ Verify that the `cilium-ingress` service has an AWS DNS name assigned to it in t
 kubectl get svc -A
 ```
 Sample Output:
-`
+```
 NAMESPACE     NAME                                TYPE           CLUSTER-IP       EXTERNAL-IP                                                                     PORT(S)                      AGE
 ...
 OUTPUT TRUNCATED
 kube-system   cilium-ingress                      LoadBalancer   172.20.6.189     k8s-kubesyst-ciliumin-849dd6c7c1-36d537f75e9357d8.elb.us-west-2.amazonaws.com   80:32741/TCP,443:30873/TCP   20m
 OUTPUT TRUNCATED
 ...
-`
+```
 
 #### Step 3.1 (Optional) - Delete `kube-proxy`
 
@@ -149,7 +148,7 @@ aws eks delete-addon --cluster-name $currentdir --addon-name kube-proxy --region
 You can confirm the deletion by performing the following command. You should see only `coredns` and `vpc-cni` in the output. 
 
 ```
-aws eks list-addons --cluster-name terraform us-west-2
+aws eks list-addons --cluster-name  terraform --region us-west-2
 ```
 
 ### Step 4 - Deploy Product Catalog Application
@@ -162,7 +161,7 @@ cd productapp
 helm install productapp . -n workshop
 ```
 
-Sample Output
+Sample Output:
 ```
 namespace/workshop created
 NAME: productapp
@@ -252,6 +251,9 @@ Get the URL to access the application.
 CILIUM_INGRESS_URL=$(kubectl get svc cilium-ingress -n kube-system -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
 echo "http://$CILIUM_INGRESS_URL"
 ```
+
+> [!NOTE]  
+> Incase you see error "upstream connect error or disconnect/reset before headers. reset reason: connection failure", Try clearing your browser's cache or open it in Incognito mode
 
 Sample Output
 ```
