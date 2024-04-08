@@ -78,7 +78,8 @@ helm upgrade --install cilium cilium/cilium --version 1.14.7 \
 
 Sample Output
 
-```Release "cilium" does not exist. Installing it now.
+```plaintext
+Release "cilium" does not exist. Installing it now.
 NAME: cilium
 NAMESPACE: kube-system
 STATUS: deployed
@@ -105,8 +106,8 @@ Verify that Cilium Pods and agents are in `Running` state by listing all the pod
 kubectl get pods -A
 ```
 Sample Output:
-
-```NAMESPACE     NAME                                           READY   STATUS    RESTARTS   AGE
+```plaintext
+NAMESPACE     NAME                                           READY   STATUS    RESTARTS   AGE
 kube-system   aws-load-balancer-controller-999bf8598-wmdcr   1/1     Running   0          112m
 kube-system   aws-load-balancer-controller-999bf8598-z5gfn   1/1     Running   0          112m
 kube-system   aws-node-787h2                                 2/2     Running   0          110m
@@ -119,10 +120,11 @@ kube-system   coredns-5b8cc885bc-kt5nl                       1/1     Running   0
 kube-system   coredns-5b8cc885bc-wbmz5                       1/1     Running   0          29m
 kube-system   hubble-relay-6f6f5476d9-z2xgx                  1/1     Running   0          29m
 kube-system   hubble-ui-644d9df97c-sghq5                     2/2     Running   0          29m
-`
+```
 
 Verify that the `cilium-ingress` service has an AWS DNS name assigned to it in the `EXTERNAL-IP` column of the output
 
+```
 kubectl get svc -A
 ```
 Sample Output:
