@@ -10,6 +10,7 @@ This project shows the steps involved to implement the solution architecture exp
    	- [ ] [Terraform](https://developer.hashicorp.com/terraform/install)
   	- [ ] [kubectl](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html)
   	- [ ] [Cilium CLI](https://docs.cilium.io/en/stable/gettingstarted/k8s-install-default/#install-the-cilium-cli)
+  	- [ ] [Helm]([https://docs.cilium.io/en/stable/gettingstarted/k8s-install-default/#install-the-cilium-cli](https://docs.aws.amazon.com/eks/latest/userguide/helm.html))
 
 Assumption : You already configured a [default] in the AWS CLI config/credentials files.
 
