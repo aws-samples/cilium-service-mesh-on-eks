@@ -77,8 +77,8 @@ helm upgrade --install cilium cilium/cilium --version 1.14.7 \
 ```
 
 Sample Output
-```
-Release "cilium" does not exist. Installing it now.
+
+```Release "cilium" does not exist. Installing it now.
 NAME: cilium
 NAMESPACE: kube-system
 STATUS: deployed
@@ -90,7 +90,7 @@ You have successfully installed Cilium with Hubble Relay and Hubble UI.
 Your release version is 1.14.7.
 
 For any further help, visit https://docs.cilium.io/en/v1.14/gettinghelp
-```
+
 
 A few things worth mentioning : 
   - `kubeProxyReplacement=strict` - We replace kube-proxy functionality with Cilium' s own eBPF based implementation. 
@@ -105,8 +105,8 @@ Verify that Cilium Pods and agents are in `Running` state by listing all the pod
 kubectl get pods -A
 ```
 Sample Output:
-`
-NAMESPACE     NAME                                           READY   STATUS    RESTARTS   AGE
+
+```NAMESPACE     NAME                                           READY   STATUS    RESTARTS   AGE
 kube-system   aws-load-balancer-controller-999bf8598-wmdcr   1/1     Running   0          112m
 kube-system   aws-load-balancer-controller-999bf8598-z5gfn   1/1     Running   0          112m
 kube-system   aws-node-787h2                                 2/2     Running   0          110m
@@ -123,7 +123,6 @@ kube-system   hubble-ui-644d9df97c-sghq5                     2/2     Running   0
 
 Verify that the `cilium-ingress` service has an AWS DNS name assigned to it in the `EXTERNAL-IP` column of the output
 
-```
 kubectl get svc -A
 ```
 Sample Output:
