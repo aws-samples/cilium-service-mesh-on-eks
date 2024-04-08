@@ -12,18 +12,18 @@ This project shows the steps involved to implement the solution architecture exp
   	- [ ] [Cilium CLI](https://docs.cilium.io/en/stable/gettingstarted/k8s-install-default/#install-the-cilium-cli)
 	- [ ] [Helm](https://docs.aws.amazon.com/eks/latest/userguide/helm.html)
 
-Assumption : You already configured a [default] in the AWS CLI config/credentials files.
+Assumption: That the AWS credentials have been previously configured, it is understood that a [default] profile exists in the AWS CLI config/credentials files
 
 ## 🧩 Solution
 
-### Step 1 - Clone this GitHub repo to your machine
+### Step 1 - Clone this GitHub repo to your Local machine, Cloud9 environment 
 
 ```
 git clone https://github.com/aws-samples/cilium-mesh-on-eks/
 cd cilium-mesh-on-eks
 ```
 
-### Step 2 - Deploy EKS cluster with Terraform
+### Step 2 - Deploy Amazon EKS cluster using Terraform
 
 ```
 cd terraform
@@ -45,9 +45,13 @@ It takes ~15 minutes for an EKS cluster creation process to complete.
 > [!NOTE]  
 > Update you kubeconfig file using the command provided in the Terraform output to access the Kubernetes API.
 
-Verify that the worker nodes status is `Ready` by `kubectl get nodes`.
+Verify that the worker nodes status is `Ready` 
 
-### Step 3 - Deploy Cilium on EKS cluster with Helm
+```
+kubectl get nodes
+```
+
+### Step 3 - Deploy Cilium on Amazon EKS cluster using Helm
 
 ```
 helm repo add cilium https://helm.cilium.io/
@@ -92,14 +96,14 @@ Your release version is 1.14.7.
 For any further help, visit https://docs.cilium.io/en/v1.14/gettinghelp
 ```
 
-A few things worth mentioning : 
+<b>A few things worth mentioning: </b>
   - `kubeProxyReplacement=strict` - We replace kube-proxy functionality with Cilium' s own eBPF based implementation. 
   - `ingressController.enabled=true` - We enable Cilium Ingress Controller.
     - `--reuse-values -f ../values_cilium.yaml` - We use a specific annotation from values_cilium.yaml so that Cilium Ingress can be exposed through an AWS Network Load Balancer.
   - `hubble.enabled=true` - We enable Hubble.
   - After the installation Cilium operator restarts the `core-dns` Pods automatically. This is expected based on [Cilium Documentation](https://docs.cilium.io/en/stable/gettingstarted/k8s-install-default/). 
 
-Verify that Cilium Pods and agents are in `Running` state by listing all the pods
+Verify that Cilium Pods and agents are in `Running` state
 
 ```
 kubectl get pods -A
@@ -121,7 +125,7 @@ kube-system   hubble-relay-6f6f5476d9-z2xgx                  1/1     Running   0
 kube-system   hubble-ui-644d9df97c-sghq5                     2/2     Running   0          29m
 ```
 
-Verify that the `cilium-ingress` service has an AWS DNS name assigned to it in the `EXTERNAL-IP` column of the output
+Verify that the `cilium-ingress` service has an AWS DNS name associated to it with an `EXTERNAL-IP` column of the output
 
 ```
 kubectl get svc -A
@@ -138,7 +142,7 @@ OUTPUT TRUNCATED
 
 #### Step 3.1 (Optional) - Delete `kube-proxy`
 
-Since Cilium replaces `kube-proxy` you can delete it on the EKS cluster by using the commands below.
+Since Cilium replaces `kube-proxy` you can delete it on the Amazon EKS cluster by using the commands below.
 
 ```
 currentdir=$(basename $PWD)
@@ -173,6 +177,8 @@ NOTES:
 ```
 
 ### Step 5 - Investigate the Product Catalog Application
+
+The sample application models a simple web store application, where customers can browse a catalog, add items to their cart and complete an order through the checkout process. For this demo our focus would be on catalog microservice
 
 Application architecture is as shown below. 
 
