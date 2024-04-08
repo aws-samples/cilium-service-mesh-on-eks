@@ -182,7 +182,7 @@ The sample application models a simple web store application, where customers ca
 
 To learn more about the application and its microservice architecture, [Click here](https://www.eksworkshop.com/docs/introduction/getting-started/about) 
 
-Catalog Microservice architecture:
+Catalog Microservice Architecture:
 
 ![](images/application_architecture.png)
 
