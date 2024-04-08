@@ -180,7 +180,9 @@ NOTES:
 
 The sample application models a simple web store application, where customers can browse a catalog, add items to their cart and complete an order through the checkout process. For this demo our focus would be on catalog microservice
 
-Application architecture is as shown below. 
+To learn more about the application and its microservice architecture, [Click here](https://www.eksworkshop.com/docs/introduction/getting-started/about) 
+
+Catalog Microservice architecture:
 
 ![](images/application_architecture.png)
 
