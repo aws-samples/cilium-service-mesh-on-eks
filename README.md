@@ -124,7 +124,7 @@ aws eks delete-addon --cluster-name $currentdir --addon-name kube-proxy --region
 You can confirm the deletion by performing the following command. You should see only `coredns` and `vpc-cni` in the output. 
 
 ```
-watch aws eks list-addons --cluster-name terraform us-west-2
+aws eks list-addons --cluster-name terraform us-west-2
 ```
 
 ### Step 4 - Deploy Product Catalog Application
