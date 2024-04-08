@@ -11,6 +11,7 @@ This project shows the steps involved to implement the solution architecture exp
   	- [ ] [kubectl](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html)
   	- [ ] [Cilium CLI](https://docs.cilium.io/en/stable/gettingstarted/k8s-install-default/#install-the-cilium-cli)
 	- [ ] [Helm](https://docs.aws.amazon.com/eks/latest/userguide/helm.html)
+ 	- [ ] [Hubble CLI] (https://docs.cilium.io/en/stable/gettingstarted/hubble_setup/#install-the-hubble-client)
 
 Assumption: That the AWS credentials have been previously configured, it is understood that a [default] profile exists in the AWS CLI config/credentials files
 
