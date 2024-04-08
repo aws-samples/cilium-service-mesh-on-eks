@@ -95,23 +95,46 @@ For any further help, visit https://docs.cilium.io/en/v1.14/gettinghelp
 A few things worth mentioning : 
   - `kubeProxyReplacement=strict` - We replace kube-proxy functionality with Cilium' s own eBPF based implementation. 
   - `ingressController.enabled=true` - We enable Cilium Ingress Controller.
-    - `reuse-values -f ~/cilium-mesh-on-eks/values_cilium.yaml` - We use a specific annotation from values_cilium.yaml so that Cilium Ingress can be exposed through an AWS Network Load Balancer.
+    - `--reuse-values -f ../values_cilium.yaml` - We use a specific annotation from values_cilium.yaml so that Cilium Ingress can be exposed through an AWS Network Load Balancer.
   - `hubble.enabled=true` - We enable Hubble.
   - After the installation Cilium operator restarts the `core-dns` Pods automatically. This is expected based on [Cilium Documentation](https://docs.cilium.io/en/stable/gettingstarted/k8s-install-default/). 
 
-Verify that Cilium Pods and agents are in `Running` state by `kubectl get pods -A`.
+Verify that Cilium Pods and agents are in `Running` state by listing all the pods
 
-Verify that the `cilium-ingress` service has an AWS DNS name assigned to it in the `EXTERNAL-IP` column of the output for `kubectl get svc -A`.
-
-Sample Output
 ```
+kubectl get pods -A
+```
+Sample Output:
+`
+NAMESPACE     NAME                                           READY   STATUS    RESTARTS   AGE
+kube-system   aws-load-balancer-controller-999bf8598-wmdcr   1/1     Running   0          112m
+kube-system   aws-load-balancer-controller-999bf8598-z5gfn   1/1     Running   0          112m
+kube-system   aws-node-787h2                                 2/2     Running   0          110m
+kube-system   aws-node-wpsbd                                 2/2     Running   0          110m
+kube-system   cilium-8ndtq                                   1/1     Running   0          29m
+kube-system   cilium-operator-689df79c69-76tbp               1/1     Running   0          29m
+kube-system   cilium-operator-689df79c69-pbxtl               1/1     Running   0          29m
+kube-system   cilium-wp2df                                   1/1     Running   0          29m
+kube-system   coredns-5b8cc885bc-kt5nl                       1/1     Running   0          29m
+kube-system   coredns-5b8cc885bc-wbmz5                       1/1     Running   0          29m
+kube-system   hubble-relay-6f6f5476d9-z2xgx                  1/1     Running   0          29m
+kube-system   hubble-ui-644d9df97c-sghq5                     2/2     Running   0          29m
+`
+
+Verify that the `cilium-ingress` service has an AWS DNS name assigned to it in the `EXTERNAL-IP` column of the output
+
+```
+kubectl get svc -A
+```
+Sample Output:
+`
 NAMESPACE     NAME                                TYPE           CLUSTER-IP       EXTERNAL-IP                                                                     PORT(S)                      AGE
 ...
 OUTPUT TRUNCATED
 kube-system   cilium-ingress                      LoadBalancer   172.20.6.189     k8s-kubesyst-ciliumin-849dd6c7c1-36d537f75e9357d8.elb.us-west-2.amazonaws.com   80:32741/TCP,443:30873/TCP   20m
 OUTPUT TRUNCATED
 ...
-```
+`
 
 #### Step 3.1 (Optional) - Delete `kube-proxy`
 
