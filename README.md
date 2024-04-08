@@ -464,6 +464,7 @@ release "productapp" uninstalled
 ingress.networking.k8s.io "productappingress" deleted
 service "catalogdetailv1" deleted
 service "catalogdetailv2" deleted
+release "cilium" uninstalled
 ```
 
 ### Step 14 - Destroy the environment
