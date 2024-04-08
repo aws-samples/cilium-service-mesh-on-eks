@@ -287,7 +287,7 @@ Sample Output
 
 Sample Screenshot
 
-![](images/hubble.png)
+![](images/hubble1.png)
 
 > [!NOTE]  
 > You may need to refresh the web page if the Hubble user interface does not show up after a few seconds.
@@ -447,6 +447,10 @@ Output 6:
 ```
 
 As shown above out of six requests, three of them are sent to `catalogdetail` and the other three are sent to `catalogdetail2`. 
+
+Sample Screenshot of Hubble UI:
+
+![](images/hubble.png)
 
 ### Step 13 - Uninstall Product Catalog Application and Cilium
 
