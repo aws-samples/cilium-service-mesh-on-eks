@@ -180,7 +180,7 @@ NOTES:
 
 The sample application models a simple web store application, where customers can browse a catalog, add items to their cart and complete an order through the checkout process. For this demo our focus would be on catalog microservice
 
-To learn more about the application and its microservice architecture, [Click here](https://www.eksworkshop.com/docs/introduction/getting-started/about) 
+To learn more about the application and its microservice architecture refer to [this GitHub repo](https://github.com/aws-containers/eks-app-mesh-polyglot-demo).
 
 Catalog Microservice Architecture:
 
@@ -260,9 +260,6 @@ CILIUM_INGRESS_URL=$(kubectl get svc cilium-ingress -n kube-system -o jsonpath='
 echo "http://$CILIUM_INGRESS_URL"
 ```
 
-> [!NOTE]  
-> Incase you see error "upstream connect error or disconnect/reset before headers. reset reason: connection failure", Try clearing your browser's cache or open it in Incognito mode
-
 Sample Output
 ```
 http://k8s-kubesyst-ciliumin-1234567-1234567.elb.us-west-2.amazonaws.com
@@ -271,6 +268,13 @@ http://k8s-kubesyst-ciliumin-1234567-1234567.elb.us-west-2.amazonaws.com
 Access the application URL either using `curl` or a browser. You should see the following web page.
 
 ![](images/application_ui.png)
+
+---
+
+> [!NOTE]  
+> Incase you see error "upstream connect error or disconnect/reset before headers. reset reason: connection failure", Try clearing your browser's cache or open it in Incognito mode
+
+---
 
 ### Step 8 - Access Cilium Hubble UI for Service Map Visualization
 
