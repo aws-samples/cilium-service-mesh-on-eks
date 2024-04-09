@@ -272,7 +272,7 @@ Access the application URL either using `curl` or a browser. You should see the 
 ---
 
 > [!NOTE]  
-> Incase you see error "upstream connect error or disconnect/reset before headers. reset reason: connection failure", Try clearing your browser's cache or open it in Incognito mode
+> In case you see error `upstream connect error or disconnect/reset before headers. reset reason: connection failure` , use your browser in Incognito mode/InPrivate mode.
 
 ---
 
