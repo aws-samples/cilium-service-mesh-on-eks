@@ -21,6 +21,7 @@ Assumption: That the AWS credentials have been previously configured, it is unde
 ```
 git clone https://github.com/aws-samples/cilium-mesh-on-eks/
 cd cilium-mesh-on-eks
+
 ```
 
 ### Step 2 - Deploy Amazon EKS cluster using Terraform
@@ -29,6 +30,7 @@ cd cilium-mesh-on-eks
 cd terraform
 terraform init
 terraform apply --auto-approve
+
 ```
 
 Sample Output
@@ -78,6 +80,7 @@ helm upgrade --install cilium cilium/cilium --version 1.14.7 \
 --set ingressController.loadbalancerMode=shared \
 --set cni.chainingMode=aws-cni \
 --set cni.install=true
+
 ```
 
 Sample Output:
@@ -107,6 +110,7 @@ Verify that Cilium Pods and agents are in `Running` state
 
 ```
 kubectl get pods -A
+
 ```
 Sample Output:
 ```
@@ -129,6 +133,7 @@ Verify that the `cilium-ingress` service has an AWS DNS name associated to it wi
 
 ```
 kubectl get svc -A
+
 ```
 Sample Output:
 ```
@@ -147,6 +152,7 @@ Since Cilium replaces `kube-proxy` you can delete it on the Amazon EKS cluster b
 ```
 currentdir=$(basename $PWD)
 aws eks delete-addon --cluster-name $currentdir --addon-name kube-proxy --region us-west-2
+
 ```
 
 You can confirm the deletion by performing the following command. You should see only `coredns` and `vpc-cni` in the output. 
@@ -163,6 +169,7 @@ kubectl create namespace workshop
 cd .. 
 cd productapp
 helm install productapp . -n workshop
+
 ```
 
 Sample Output:
@@ -195,6 +202,7 @@ Have a look at the current resources deployed as part of the `Product Catalog Ap
 
 ```
 kubectl get deployment,pod,service  -n workshop
+
 ```
 
 Sample Output
@@ -244,6 +252,7 @@ spec:
             port:
               number: 9000 # route the requests to this port of the frontend service
 EOF
+
 ```
 
 Sample Output
@@ -258,6 +267,7 @@ Get the URL to access the application.
 ```
 CILIUM_INGRESS_URL=$(kubectl get svc cilium-ingress -n kube-system -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
 echo "http://$CILIUM_INGRESS_URL"
+
 ```
 
 Sample Output
@@ -282,6 +292,7 @@ You can use Cilium Hubble to visualize service dependencies. Use the commands in
 
 ```
 cilium hubble ui
+
 ```
 
 Sample Output
@@ -349,6 +360,7 @@ spec:
     app: catalogdetail
     version: v2
 EOF
+
 ```
 
 
@@ -423,6 +435,7 @@ spec:
         split_external_local_origin_errors: true
         consecutive_local_origin_failure: 2
 EOF
+
 ```
 
 ### Step 12 - Access `Catalog Detail` microservice
@@ -432,6 +445,7 @@ Let' s send requests from the `Product Catalog` microservice to `Catalog Detail`
 ```
 productcatalogpod=$(kubectl get pods -n workshop | awk '{print $1}' | grep -e "productcatalog")
 for i in {1..6}; do echo "Output $i:"; kubectl -n workshop exec -it $productcatalogpod -- curl catalogdetail:3000/catalogDetail; echo ""; done
+
 ```
 
 Sample output
@@ -464,6 +478,7 @@ kubectl delete ingress productappingress -n workshop
 kubectl delete svc catalogdetailv1 -n workshop
 kubectl delete svc catalogdetailv2 -n workshop
 helm uninstall cilium -n kube-system
+
 ```
 
 Sample Output
