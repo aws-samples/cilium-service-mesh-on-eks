@@ -1,6 +1,6 @@
 # Elevate Your Amazon EKS Environment with Cilium Service Mesh 
 
-This project shows the steps involved to implement the solution architecture explained in this AWS blog: [Elevate Your Amazon EKS Environment with Cilium Service Mesh]()
+This project shows the steps involved to implement the solution architecture explained in this AWS blog: [Elevate Your Amazon EKS Environment with Cilium Service Mesh](https://aws.amazon.com/blogs/opensource/getting-started-with-cilium-service-mesh-on-amazon-eks/)
 
 ## 🎯 Prerequisites
 
