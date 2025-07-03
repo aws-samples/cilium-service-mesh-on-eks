@@ -1,0 +1,160 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: demoapp-sa
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: demoapp-clusterrole
+rules:
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: demoapp-clusterrolebinding
+subjects:
+  - kind: ServiceAccount
+    name: demoapp-sa
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: demoapp-clusterrole
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demoapp1
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demoapp1
+  template:
+    metadata:
+      labels:
+        app: demoapp1
+    spec:
+      serviceAccountName: demoapp-sa
+      containers:
+      - image: dumlutimuralp/demoapp
+        name: demoapp1
+        env:
+        - name: APP_NAME
+          value: "Application1"
+        - name: BG_COLOR
+          value: "red" 
+        - name: HEALTH
+          value: "app1health"  
+        - name: MY_NODENAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demoapp1service
+spec:
+  selector:
+    app: demoapp1
+  ports:
+    - protocol: TCP
+      port: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demoapp2
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demoapp2
+  template:
+    metadata:
+      labels:
+        app: demoapp2
+    spec:
+      serviceAccountName: demoapp-sa
+      containers:
+      - image: dumlutimuralp/demoapp
+        name: demoapp2
+        env:
+        - name: APP_NAME
+          value: "Application2"
+        - name: BG_COLOR
+          value: "green"
+        - name: HEALTH
+          value: "app2health"
+        - name: MY_NODENAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demoapp2service
+spec:
+  selector:
+    app: demoapp2
+  ports:
+    - protocol: TCP
+      port: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demoingress # name given to the ingress
+  annotations:
+    alb.ingress.kubernetes.io/load-balancer-name: $ALBName
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  ingressClassName: alb # defines that this ingress will be owned by AWS Load Balancer Controller
+  rules:
+  - host: $app1hostname
+    http:
+      paths:
+      - path: / # this rule applies to all requests that specifies this path
+        pathType: Prefix
+        backend:
+          service:
+            name: demoapp1service # route all these requests to this service
+            port:
+               number: 80 
+  - host: $app2hostname
+    http:
+      paths:
+      - path: / # this rule applies to all requests that specifies this path
+        pathType: Prefix
+        backend:
+          service:
+            name: demoapp2service # route all these requests to this service
+            port:
+               number: 80 
+  - http:
+      paths:
+      - path: /app1health # this rule applies to all requests that specifies this path
+        pathType: Prefix
+        backend:
+          service:
+            name: demoapp1service # route all these requests to this service
+            port:
+               number: 80 
+  - http:
+      paths:
+      - path: /app2health # this rule applies to all requests that specifies this path
+        pathType: Prefix
+        backend:
+          service:
+            name: demoapp2service # route all these requests to this service
+            port:
+               number: 80
